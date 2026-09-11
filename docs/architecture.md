@@ -1,24 +1,29 @@
 # Implementation architecture
 
-Session 001, engine 0.1.0, recipe schema 1. This describes the actual code. [Research alternatives](research/architecture-options.md) retain the reasoning behind it; [status](status.md) records unfinished work.
+Session 002, app/prepared engine 0.2.0, legacy wall engine 0.1.0, recipe schema 1, project/setup schema 1. This describes the actual code. [Research alternatives](research/architecture-options.md) retain the reasoning behind it; [status](status.md) records unfinished work.
 
 ## Boundaries
 
 ```mermaid
 flowchart LR
-  F[Recipe file / presets] --> V[Strict recipe validation]
-  UI[React editor + undo] --> V
+  F[Recipe or project files / presets] --> V[Strict recipe and setup validation]
+  C[Flat slicer configuration] --> I[Bounded import proposal and review]
+  I --> UI[React project editor and atomic undo]
+  UI --> V
   V --> W[Generation worker]
   W --> G[Pure shape + pattern generators]
-  G --> E[Typed deposition events]
+  G --> B[Foundation transition wall rim planner]
+  B --> E[Typed deposition events]
   E --> T[Commanded timeline]
   E --> R[Three.js geometric preview]
   E --> X[Export worker]
-  X --> S[Draft serializer]
-  S --> A[Independent modal parser + numeric audit]
-  A --> D[Inspection draft + experiment report]
+  X --> S[Audited motion serialization]
+  S --> A[Independent draft parser]
+  A --> D[Wall inspection draft]
+  S --> M[MINI startup and finish adapter]
+  M --> Q[Independent complete-job interpreter]
+  Q --> J[G-code and checksum-linked report]
   E -. later .-> P[Calibrated material solver]
-  E -. later .-> M[Verified printer adapter + full job]
 ```
 
 | Module | Owns | Must not own |
@@ -31,6 +36,10 @@ flowchart LR
 | `src/domain/math.ts`, `stats.ts` | Length, volume and commanded-duration accounting | Firmware motion planning |
 | `src/preview/` | Timeline indexing, geometric strand display and partial-event playback | Physical simulation or manufacturing export calculations |
 | `src/export/` | Strict draft input checks, formatting, separate modal parse and post-format audit | Heating, homing or unverified profile macros |
+| `src/print/setup.ts`, `project.ts`, `importProfile.ts` | Normalized setup, versioned project files, bounded flat config proposals/provenance | Executing imported scripts, interpreting arbitrary inheritance |
+| `src/print/prepare.ts` | Explicit foundation/transition/wall/rim stages and placement | Firmware commands, rendering objects |
+| `src/print/diagnostics.ts` | MINI envelope, deposited-width, speed/flow and setup checks | Claims of physical printhead clearance or material contact |
+| `src/print/complete.ts`, `auditMini.ts` | MINI assembly and independent final-text state interpretation | UI-cached path trust, generic firmware emulation |
 | `src/workers/` | Generation/export execution boundaries | Persistent storage or accounts |
 | `src/ui/` | Editing, local files, views, undo, controls | Duplicated toolpath mathematics |
 
@@ -44,7 +53,7 @@ For height fraction `t`, the nominal radius is:
 
 `r(t) = (baseDiameter + (topDiameter - baseDiameter)t)/2 + belly·sin(πt)`.
 
-The radius minimum is computed analytically from endpoints and any interior stationary point. Circle uses `(r cos θ, r sin θ)`. Ellipse scales local Y by `1/aspectRatio`. Rounded square uses exponent-4 superellipse coordinates `(r sign(cos θ)√|cos θ|, r sign(sin θ)√|sin θ|/aspectRatio)`. **Twist rotates these local XY coordinates**, rather than changing θ before non-circular mapping. Nominal Z currently starts at design offset 0.4 mm; a future foundation planner will own placement explicitly.
+The radius minimum is computed analytically from endpoints and any interior stationary point. Circle uses `(r cos θ, r sin θ)`. Ellipse scales local Y by `1/aspectRatio`. Rounded square uses exponent-4 superellipse coordinates `(r sign(cos θ)√|cos θ|, r sign(sin θ)√|sin θ|/aspectRatio)`. **Twist rotates these local XY coordinates**, rather than changing θ before non-circular mapping. Legacy wall Z starts at design offset 0.4 mm. The prepared-build planner explicitly places that wall at foundation top plus one foundation layer height.
 
 The wall parameter spans `height/pitch` revolutions. A band's accumulated phase advances by `(repeatsPerTurn + phaseAdvanceDeg/360)·Δθ`, preserving phase across seams and band transitions. Fractional turns and local Z descents are permitted. Radial displacement changes the contour's scalar radius in its local frame; it is not a true surface-normal offset on non-circular forms.
 
@@ -61,25 +70,39 @@ Sampling uses motif density, a conservative travel-density estimate and a circul
 
 Moving volume is `π(strandDiameter/2)² · full 3D segment length · process flow · local flow`. Filament E is volume divided by `π(filamentDiameter/2)²` exactly once. This is an explicitly uncalibrated free-strand approximation; supported deposition can need a different section model.
 
-The strand view draws a circular section inferred from volume/length. Stationary deposits are volume-equivalent spheres, not a predicted blob shape. Playback draws completed events plus the current event's fractional segment or deposit volume, so material does not appear ahead of the nozzle. Zero-volume motion remains visible in the nozzle-path view. Band colour is explanatory and does not imply multiple extruders/materials.
+The wall strand view draws a circular section inferred from volume/length. Prepared foundation/transition/rim segments use volume-equivalent rectangular sections with configured height `h` and width `volume/(length·h)`, shifted down `h/2`; planar first-layer geometry reaches Z=0. A local orthonormal frame follows sloped segments, where the global downward shift remains a documented display approximation. Method colours distinguish these build stages in gray. Stationary deposits are volume-equivalent spheres, not a predicted blob shape. Playback draws completed events plus the current event's fractional segment or deposit volume, so material does not appear ahead of the nozzle. Zero-volume motion remains visible in the nozzle-path view. Band colour is explanatory and does not imply multiple extruders/materials.
 
 There is no gravity, thermal model, adhesion/contact solve, nozzle-envelope check, firmware acceleration model or claimed physical accuracy in this build. The nominal form, commanded path and geometric material view are named separately. Executed-motion and calibrated-material views are future adapters with their own model versions and measured validity domains.
 
 ## State, resources and persistence
 
-The validated recipe is the single editable source of truth. Generator results carry `JSON.stringify(recipe)` from canonical parsed field order; this is a freshness/reproducibility key, not a security hash. A result stays paired with the exact recipe that produced it. Export captures an immutable recipe/result pair and uses a separate worker; it cannot silently switch to a newer design while the dialog is open.
+The validated project (recipe plus setup) is the editable source of truth. Wall results retain their canonical recipe key; prepared results additionally carry `JSON.stringify({recipe, foundation})`. These are freshness/reproducibility keys, not security hashes. Each result stays paired with its exact recipe and foundation, including form and bead preview settings. Material-only edits do not regenerate geometry. Draft export captures an immutable recipe/result pair; complete export captures the project and regenerates/validates from persisted inputs in a separate worker, never trusting a cached result from another setup.
 
 Changes debounce for 120 ms. Obsolete workers are terminated; request IDs also reject queued stale replies. Worker errors are keyed to their request so a later successful edit can recover. A stale viewport is labelled as updating/previous output, and current-recipe export remains disabled. The renderer allocates only the selected representation, disposes buffers/materials/instances, and draws only on changes or active camera/playback movement.
 
-Recipes are local JSON files, limited to 1 MB. Unknown versions/fields, non-finite values, invalid shapes and duplicate band IDs fail explicitly. Imported data never executes code. Undo keeps 80 recipe snapshots; no automatic browser save exists. Save before closing or refreshing. Optional WebMCP tools call the same validator and editor actions, with no additional storage or service.
+Recipes and projects are local JSON files, limited to 1 MB. Unknown versions/fields, non-finite values, invalid shapes and duplicate band IDs fail explicitly. Imported data never executes code. Undo keeps 80 complete project snapshots; no automatic browser save exists. Save before closing or refreshing. Legacy recipe import retains current setup; project import replaces both atomically. Profile proposals cannot apply after the source project changes. Optional WebMCP recipe tools call the same validator and editor actions, preserving setup without additional storage or service.
 
-Schema 1 preserves editable recipe semantics; byte-identical toolpath replay across future engine releases is not yet guaranteed. Experiment reports record engine 0.1.0 and the generating recipe. Changes to persisted parameter meaning require an explicit schema migration/version change; algorithm refinements must retain engine provenance and explain any resulting path differences. Retain the exported report/draft when an exact experiment record matters.
+Schema 1 preserves editable recipe semantics; byte-identical toolpath replay across future engine releases is not yet guaranteed. Reports record the actual engine version; complete-job reports also record adapter version `mini-5.1.2/1`, the project, build key, preview assumptions and SHA-256 of the final G-code. Changes to persisted parameter meaning require an explicit schema migration/version change; algorithm refinements must retain engine provenance and explain path differences. Retain the actual G-code and report when an exact experiment record matters.
 
-## Draft audit and later printer adapters
+## Foundation planning
+
+The foundation alternates outward/inward concentric contours so its final layer ends at the outer seam. Ring spacing uses the maximum section radius to support ellipse/squircle geometry. Layer changes are explicit 2 mm/s Z travel. All foundation/body/transition/rim work is included in the 100,000-event preflight.
+
+Foundation and rim volume use stadium area `A=(width−h)h+πh²/4`, multiplied by full 3D segment length and recipe flow. The one-turn transition rises from foundation top to top plus `h`; each segment uses midpoint gap `g` in place of `h`, preventing a full-height bead from being extruded into a near-zero initial gap. Tests compare its sum against the quadratic-area integral with the known midpoint correction and check first/last volumes.
+
+The wall placement is explicit, with a cubic smoothstep start envelope applied to Z/radial pattern offsets over `blendHeightMm`. A bound `blendHeight >= 1.125·maximumDownwardOffset` prevents the ramped wall from crossing its foundation reference. Requested amplitudes are preserved above this lead-in. This is a geometric bound, not proof of local nozzle contact, strand attachment or a printable wall. Rim turns continue the wall's global contour angle/twist and rise at foundation layer pitch.
+
+## Draft audit and MINI adapter
 
 The inspection draft uses G21/G90/M83/G92 E0, absolute XYZ, relative E, explicit feed, G0/G1/G4, and anchor comments. It omits all machine startup/end behavior and is named `.gcode.txt`. XYZ has three decimal places, E five, feed three, and dwell a 1 ms resolution. Positive extrusion, motion, feed or dwell that disappears in formatting fails explicitly. Event totals, parsed modal state, coordinates, volume and commanded duration are compared after formatting with per-event rounding accounting. Initial-approach duration is excluded because the starting machine position is unknown.
 
-The independent parser supports this emitted dialect only; it is not a general slicer/firmware emulator. A later normalized printer/material record must provide provenance, capabilities, actual firmware, offsets/envelopes and explicit start/end semantics. Profile parsing must not execute arbitrary PrusaSlicer macros. The next stage adds that adapter and foundations without putting machine-specific behavior into the generative methods.
+The independent draft parser supports this emitted dialect only; it is not a general slicer/firmware emulator. `exportAuditedMotion` exposes the already validated per-event command groups to the complete-job adapter without reparsing or modifying arbitrary user G-code.
+
+The MINI adapter requires the recorded firmware family version, stock hotend, 0.4 mm nozzle and 1.75 mm filament. It establishes linear relative E (including `M200 D0`), resets speed/flow/pressure state, sets acceleration, waits for a positive bed target and 170 °C nozzle (zero bed target is explicit heater-off without a wait), homes/meshes, establishes Z clearance before XY, heats/purges/approaches, emits the stages, then retracts/lifts/parks/synchronizes and shuts down. Firmware input shaping is retained. See [pinned command research](research/mini-5.1.2-adapter.md).
+
+`auditMiniGcode` independently interprets final text, requiring the exact setup targets, waits, modes, fan transition and controlled finish. It checks parsed coordinates/feeds/flow and tracks body E, dwell and move counts; the compiler compares these against quantized event expectations. Tests mutate or delete commands to prove that the checker can reject regressions. The parser is specific to this small dialect, not a model of thermal response or firmware execution. Nominal duration excludes heating/probing/homing and acceleration.
+
+The [flat-config mapping](guides/profile-import.md) preserves source digest and imported baselines while excluding macro/script execution. No bundled upstream printer database exists. Additional firmware adapters should extend the normalized contracts and bring independent dialect fixtures; generative methods must stay machine-independent.
 
 ## Build and reuse
 

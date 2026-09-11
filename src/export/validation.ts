@@ -372,7 +372,7 @@ function validateEvent(event: ToolpathEvent, index: number): void {
       point(event.to, `${label}.to`);
       nonNegative(event.volumeMm3, `${label}.volumeMm3`);
       positive(event.speedMmS, `${label}.speedMmS`);
-      if (!['wall', 'span', 'rise', 'fall', 'transition'].includes(event.role)) {
+      if (!['wall', 'span', 'rise', 'fall', 'transition', 'foundation', 'rim'].includes(event.role)) {
         throw new Error(`${label}.role is unsupported.`);
       }
       return;

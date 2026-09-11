@@ -1,0 +1,70 @@
+{
+  "format": "np3dp-physical-observation",
+  "schemaVersion": 1,
+  "run": {
+    "studyId": "control",
+    "recipeName": "01 Control cup",
+    "date": null,
+    "completed": null,
+    "stoppedAtStage": null,
+    "stopReason": null,
+    "advanceToNextStudy": null
+  },
+  "files": {
+    "projectFilename": null,
+    "printReportFilename": null,
+    "gcodeFilename": null,
+    "gcodeSha256": null
+  },
+  "printer": {
+    "variant": "unknown",
+    "firmware": "5.1.2+13478",
+    "hotend": "stock",
+    "nozzleDiameterMm": 0.4,
+    "probeIdentity": null,
+    "sheetType": null,
+    "sheetProfile": null,
+    "firstLayerCalibrationConfirmed": false
+  },
+  "material": {
+    "product": "eSUN PLA Basic",
+    "color": "unspecified",
+    "lot": null,
+    "nominalFilamentDiameterMm": 1.75,
+    "storageOrDryingNotes": ""
+  },
+  "settings": {
+    "firstLayerNozzleC": null,
+    "bodyNozzleC": null,
+    "firstLayerBedC": null,
+    "bodyBedC": null,
+    "fanPercentAfterFoundation": null,
+    "flowCeilingMm3S": null,
+    "commandedAccelerationMmS2": null,
+    "flowMultiplier": null,
+    "pressureAdvance": "disabled-unvalidated",
+    "inputShaper": "firmware-managed"
+  },
+  "observations": {
+    "purgeContinuous": null,
+    "foundationAdhered": null,
+    "foundationLineContact": null,
+    "wallContinuous": null,
+    "nozzleContactObserved": null,
+    "detachedOrLooseStrands": null,
+    "visibleRinging": null,
+    "openingAndAttachmentNotes": "",
+    "photoFilenames": [],
+    "notes": ""
+  },
+  "measurements": {
+    "sourceContourBaseDiameterMm": null,
+    "sourceContourTopDiameterMm": null,
+    "measuredOutsideBaseDiameterMm": null,
+    "measuredOutsideTopDiameterMm": null,
+    "measuredHeightMm": null,
+    "measuredWallThicknessMm": null,
+    "measuredOpeningWidthsMm": [],
+    "measuredCentreSagMm": null
+  }
+}

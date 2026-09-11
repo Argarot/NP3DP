@@ -18,7 +18,7 @@ A project's code license does not automatically establish rights to every linked
 
 The independent-code route passed G0 under the build authorization. Publish required third-party notices with every engineering preview. The requested public GitHub source/Pages preview does not select an open-source license for the original product code; package metadata remains `private: true` and `UNLICENSED`. Obtain the product manager's decision before adopting project distribution terms or incorporating code/profiles that constrain them.
 
-## Installed runtime components — session 001
+## Installed runtime components — unchanged through session 002
 
 | Component | Exact version | Source | License / incorporated scope |
 |---|---|---|---|
@@ -33,3 +33,5 @@ All runtime license texts and copyright notices are retained verbatim in [THIRD_
 The development graph is **not all permissive**: Lightning CSS 1.33.0 and its optional platform binaries declare MPL-2.0. They are used unmodified as build tooling and are not included in the static browser artifact or committed `node_modules`. Review their obligations again if distributing tooling/binaries or modifying that source. Mozilla explains the distinction between use and distribution, and the file scope of MPL obligations. [Mozilla MPL FAQ](https://www.mozilla.org/en-US/MPL/2.0/FAQ/)
 
 The other recorded development identifiers are MIT, Apache-2.0, ISC and BSD-3-Clause. This inventory describes this resolved build, not blanket permission to adopt future versions or other packages. GitHub Actions are pinned to inspected official action commits in the workflow files.
+
+Session 002 adds independently written profile parsing and a firmware adapter, with no new packages or vendored slicer/profile data. Pinned Prusa firmware and profile sources were consulted as command/data references; [the research record](research/mini-5.1.2-adapter.md) distinguishes historical AGPL profile material from unresolved rights in a separate newer profile repository. User-imported flat configurations remain local: only selected values, source identifiers, digest and mapped/ignored field names are retained. Embedded scripts, G-code and service credentials are not copied into exported projects. Broad profile bundling still needs a separate licensing review.

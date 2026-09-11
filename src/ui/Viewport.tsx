@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import type { GeneratedToolpath, Recipe } from '../domain/types';
+import type { FoundationSettings } from '../print/types';
 import { createPathScene, disposeObject, scenePoint } from '../preview/scene';
 import type { PathScene } from '../preview/scene';
 import type { ColorMode, ViewMode } from '../preview/types';
@@ -20,9 +21,11 @@ interface SceneState {
 interface Props {
   recipe: Recipe; path: GeneratedToolpath | null; mode: ViewMode; colorMode: ColorMode;
   progress: number; pending: boolean; playing: boolean; generationFailed: boolean;
+  wallOffsetZMm?: number;
+  foundation?: FoundationSettings;
 }
 
-export function Viewport({ recipe, path, mode, colorMode, progress, pending, playing, generationFailed }: Props) {
+export function Viewport({ recipe, path, mode, colorMode, progress, pending, playing, generationFailed, wallOffsetZMm = 0, foundation }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const state = useRef<SceneState | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -114,10 +117,11 @@ export function Viewport({ recipe, path, mode, colorMode, progress, pending, pla
     const current = state.current;
     if (!current) return;
     if (current.pathScene) { current.scene.remove(current.pathScene.root); disposeObject(current.pathScene.root); }
-    current.pathScene = createPathScene(recipe, path, mode, colorMode);
+    current.pathScene = createPathScene(recipe, path, mode, colorMode, foundation);
+    if (mode === 'form') current.pathScene.root.position.y = wallOffsetZMm;
     current.scene.add(current.pathScene.root);
     current.invalidate();
-  }, [recipe, path, mode, colorMode]);
+  }, [recipe, path, mode, colorMode, wallOffsetZMm, foundation]);
   useEffect(() => {
     const current = state.current;
     if (!current || !path || !timeline) return;

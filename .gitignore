@@ -5,6 +5,7 @@ test-results/
 playwright-report/
 .sites-runtime/
 .work/
+artifacts/
 *.local
 *.log
 *.tsbuildinfo

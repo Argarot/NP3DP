@@ -1,6 +1,6 @@
 # Product requirements
 
-**Status: approved for implementation on 11 September 2026.** The product manager authorized building with logged defaults for low-impact decisions, discussion for major decisions, a visible result each session, and current documentation. Hardware facts, distribution licensing and numerical physical-accuracy targets remain open as recorded in [decisions](decisions.md). [Implementation status](status.md) distinguishes built capabilities from acceptance gates.
+**Status: approved for implementation on 11 September 2026; session 002 hardware and print workflow recorded.** The product manager authorized building with logged defaults for low-impact decisions, discussion for major decisions, a visible result each session, and current documentation. Distribution licensing, measured clearance and numerical physical-accuracy targets remain open as recorded in [decisions](decisions.md). [Implementation status](status.md) distinguishes built capabilities from acceptance gates.
 
 ## Purpose
 
@@ -8,7 +8,7 @@ Create an experimental deposition studio that expands what existing 3D printers 
 
 Creative freedom takes priority over guaranteed print success. A failed or unstable print is an acceptable experimental outcome; incorrect command generation or a misleading claim about the preview is a software defect. The product is a procedural design and manufacturing environment, with continuous vase printing as one supported strategy rather than a universal constraint.
 
-The first physical reference remains an open decorative vase on the product manager's Prusa MINI+, with a 0.4 mm nozzle and white or black eSUN PLA, for dry use or a liner. That reference anchors initial testing; it does not define the ceiling of the product.
+The first physical reference remains an open decorative vase on the product manager's Prusa MINI-family printer, with a stock hotend, 0.4 mm nozzle, firmware `5.1.2+13478`, and white or black eSUN PLA Basic, for dry use or a liner. The user corrected MINI+ to an uncertain MINI/MINI+ variant. The agreed test sequence starts with a small control coupon before a miniature woven vase. That reference anchors initial testing; it does not define the ceiling of the product.
 
 ## Confirmed requirements
 
@@ -120,7 +120,7 @@ A nominal STL export is optional pending the product decision. It must say wheth
 
 ## Slicer profile reuse
 
-Propose PrusaSlicer 2.9-style exported configuration as the first compatibility target; evaluate SuperSlicer and newer formats through explicit adapters. Import a reviewed subset of settings, report omissions, and preserve source/version provenance. Resolve required macros and compatibility rules or reject them; never pass unresolved slicer placeholders into G-code.
+The session 002 adapter accepts a supported subset of flat PrusaSlicer-style exported configuration, tested with synthetic 2.9-style fixtures. Review changes before applying, report omissions, and preserve source/version provenance. A real user-exported configuration remains to be compared. SuperSlicer and other formats need their own fixtures/adapters. NP3DP supplies its own reviewed startup/finish; imported scripts and G-code macros remain inactive. Unresolved inheritance and ambiguous hardware fail explicitly. See the [implemented mapping contract](guides/profile-import.md).
 
 Non-planar clearance, contact, pitch/amplitude/frequency limits, and physical test status are our extensions. Importing a profile for another printer does not promote that printer to validated support. Bundle upstream profile files only after their specific licensing route is settled.
 
@@ -147,4 +147,4 @@ An alpha must demonstrate methods beyond sine-deformed walls. Required alpha fam
 
 ## Approval record
 
-Pending. Resolve the [decision log](decisions.md), select numeric acceptance targets at their designated gates, and approve this document's scope before any application code starts. Approval may explicitly delegate routine engineering choices while retaining product scope changes for the product manager.
+Approved by the product manager's instruction to start building, with routine engineering decisions delegated and logged. The subsequent instruction to build the next session authorized the first-print workflow; the user confirmed firmware, hotend, filament grade and coupon-first staging. Numerical physical targets and major future choices remain subject to their designated gates. This approval does not mark physical validation, higher-fidelity simulation or the later required milestones complete.

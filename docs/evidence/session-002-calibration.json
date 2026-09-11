@@ -1,0 +1,200 @@
+{
+  "generatedAt": "2026-09-11T21:38:13.904Z",
+  "node": "v22.23.2",
+  "platform": "win32",
+  "measurementScope": "One local compilation per study. Commanded times exclude thermal waits, probing, homing and firmware dynamics. No physical validation.",
+  "studies": [
+    {
+      "id": "control",
+      "filename": "01-control-cup",
+      "gcodeSha256": "6f32874805a0b12822e56ee2141a60f02fb82ba4b4e0b2ba7cb8a5199eb122ab",
+      "bytes": 748854,
+      "events": 16461,
+      "compileMs": 951.29,
+      "commandMetrics": {
+        "maximumXySpeedMmS": 20,
+        "maximumZSpeedMmS": 2,
+        "maximumFlowMm3S": 2.261946710584651,
+        "minimumZMm": 0.2,
+        "maximumZMm": 11
+      },
+      "toolpathStats": {
+        "pathLengthMm": 8322.064600870684,
+        "extrusionVolumeMm3": 812.8191221375438,
+        "filamentLengthMm": 337.93092212977666,
+        "commandedDurationS": 433.73603886595487,
+        "extrudeMoves": 16459,
+        "travelMoves": 2,
+        "dwellCount": 0,
+        "bounds": {
+          "min": {
+            "x": -15,
+            "y": -14.999999668098884,
+            "z": 0.2
+          },
+          "max": {
+            "x": 15,
+            "y": 14.999999963122098,
+            "z": 11
+          }
+        }
+      },
+      "audit": {
+        "errors": [],
+        "moveCount": 16471,
+        "bodyMoveCount": 16462,
+        "bodyExtrusionMm": 337.9262400000037,
+        "bodyDwellSeconds": 0,
+        "depositedFilamentMm": 343.9262399999992,
+        "commandedSeconds": 448.4113092267907,
+        "maximumFlowMm3S": 2.405281875404685,
+        "shutdownComplete": true
+      },
+      "physicalStatus": "unprinted"
+    },
+    {
+      "id": "wave",
+      "filename": "02-wave-coupon",
+      "gcodeSha256": "fdc5bf3873f8650ba466ae6ce8c9ecdb408fb7a0c3a5f1cfb358c072c7e31f1a",
+      "bytes": 752969,
+      "events": 16631,
+      "compileMs": 581.26,
+      "commandMetrics": {
+        "maximumXySpeedMmS": 20,
+        "maximumZSpeedMmS": 3.0181583664025675,
+        "maximumFlowMm3S": 1.9085175370557999,
+        "minimumZMm": 0.2,
+        "maximumZMm": 15.053441064686334
+      },
+      "toolpathStats": {
+        "pathLengthMm": 9037.141260959317,
+        "extrusionVolumeMm3": 927.5394960604971,
+        "filamentLengthMm": 385.6261112450448,
+        "commandedDurationS": 536.1999977138727,
+        "extrudeMoves": 16629,
+        "travelMoves": 2,
+        "dwellCount": 0,
+        "bounds": {
+          "min": {
+            "x": -16.99999872796329,
+            "y": -16.999997137917447,
+            "z": 0.2
+          },
+          "max": {
+            "x": 17,
+            "y": 16.99999968199082,
+            "z": 15.053441064686334
+          }
+        }
+      },
+      "audit": {
+        "errors": [],
+        "moveCount": 16641,
+        "bodyMoveCount": 16632,
+        "bodyExtrusionMm": 385.63029999998776,
+        "bodyDwellSeconds": 0,
+        "depositedFilamentMm": 391.6302999999886,
+        "commandedSeconds": 550.8636390476555,
+        "maximumFlowMm3S": 2.405281875404685,
+        "shutdownComplete": true
+      },
+      "physicalStatus": "unprinted"
+    },
+    {
+      "id": "miniature",
+      "filename": "03-mini-woven-vase",
+      "gcodeSha256": "854a41d23ab820fbd28e4b22e55140594899b80db975d7cd951db2230b753ca8",
+      "bytes": 3117836,
+      "events": 68480,
+      "compileMs": 2049.65,
+      "commandMetrics": {
+        "maximumXySpeedMmS": 20,
+        "maximumZSpeedMmS": 6.7365252099827995,
+        "maximumFlowMm3S": 2.171468842161265,
+        "minimumZMm": 0.2,
+        "maximumZMm": 46.36575287549639
+      },
+      "toolpathStats": {
+        "pathLengthMm": 31155.309372690554,
+        "extrusionVolumeMm3": 4735.042948359666,
+        "filamentLengthMm": 1968.602098896622,
+        "commandedDurationS": 2295.832041517646,
+        "extrudeMoves": 68478,
+        "travelMoves": 2,
+        "dwellCount": 0,
+        "bounds": {
+          "min": {
+            "x": -27.465130020303654,
+            "y": -27.46525959380498,
+            "z": 0.2
+          },
+          "max": {
+            "x": 27.465038850752634,
+            "y": 27.464649700790766,
+            "z": 46.36575287549639
+          }
+        }
+      },
+      "audit": {
+        "errors": [],
+        "moveCount": 68490,
+        "bodyMoveCount": 68481,
+        "bodyExtrusionMm": 1968.5883600000793,
+        "bodyDwellSeconds": 0,
+        "depositedFilamentMm": 1974.5883600000855,
+        "commandedSeconds": 2310.8658337507695,
+        "maximumFlowMm3S": 2.405281875404685,
+        "shutdownComplete": true
+      },
+      "physicalStatus": "unprinted"
+    },
+    {
+      "id": "held-spans",
+      "filename": "04-held-span-coupon",
+      "gcodeSha256": "37256965892c3eecd55ed7619c4e47b22d4985d46bfd5d0285276fadb6d9ad9c",
+      "bytes": 660049,
+      "events": 14987,
+      "compileMs": 453.77,
+      "commandMetrics": {
+        "maximumXySpeedMmS": 20,
+        "maximumZSpeedMmS": 6,
+        "maximumFlowMm3S": 1.628318530717959,
+        "minimumZMm": 0.2,
+        "maximumZMm": 13.583333333333336
+      },
+      "toolpathStats": {
+        "pathLengthMm": 10329.128888045972,
+        "extrusionVolumeMm3": 1196.0491362938706,
+        "filamentLengthMm": 497.2594474369608,
+        "commandedDurationS": 1100.0614849352455,
+        "extrudeMoves": 14021,
+        "travelMoves": 2,
+        "dwellCount": 321,
+        "bounds": {
+          "min": {
+            "x": -16,
+            "y": -16,
+            "z": 0.2
+          },
+          "max": {
+            "x": 16,
+            "y": 16,
+            "z": 13.583333333333336
+          }
+        }
+      },
+      "audit": {
+        "errors": [],
+        "moveCount": 14354,
+        "bodyMoveCount": 14345,
+        "bodyExtrusionMm": 497.2503000000463,
+        "bodyDwellSeconds": 48.14999999999972,
+        "depositedFilamentMm": 503.25030000004676,
+        "commandedSeconds": 1115.554903236621,
+        "maximumFlowMm3S": 2.405281875404685,
+        "shutdownComplete": true
+      },
+      "physicalStatus": "unprinted"
+    }
+  ]
+}

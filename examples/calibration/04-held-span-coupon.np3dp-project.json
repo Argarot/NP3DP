@@ -1,0 +1,97 @@
+{
+  "format": "np3dp-project",
+  "schemaVersion": 1,
+  "recipe": {
+    "schemaVersion": 1,
+    "name": "04 Held-span coupon",
+    "shape": {
+      "heightMm": 12,
+      "baseDiameterMm": 32,
+      "topDiameterMm": 32,
+      "bellyMm": 0,
+      "section": "circle",
+      "aspectRatio": 1,
+      "twistDeg": 0
+    },
+    "process": {
+      "pitchMm": 0.3,
+      "strandDiameterMm": 0.45,
+      "filamentDiameterMm": 1.75,
+      "speedMmS": 6,
+      "travelMmS": 60,
+      "flowMultiplier": 1
+    },
+    "bands": [
+      {
+        "id": "span-collar",
+        "kind": "wave",
+        "weight": 1,
+        "amplitudeMm": 0,
+        "repeatsPerTurn": 14,
+        "phaseAdvanceDeg": 0,
+        "radialAmplitudeMm": 0,
+        "speedVariation": 0,
+        "flowVariation": 0,
+        "dwellSeconds": 0,
+        "anchorVolumeMm3": 0
+      },
+      {
+        "id": "timed-spans",
+        "kind": "bridge",
+        "weight": 2,
+        "amplitudeMm": 0.8,
+        "repeatsPerTurn": 12,
+        "phaseAdvanceDeg": 0,
+        "radialAmplitudeMm": 0,
+        "speedVariation": 0,
+        "flowVariation": 0,
+        "dwellSeconds": 0.15,
+        "anchorVolumeMm3": 0.03
+      }
+    ]
+  },
+  "setup": {
+    "schemaVersion": 1,
+    "printer": {
+      "adapter": "prusa-mini-buddy-5.1.2",
+      "variant": "unknown",
+      "firmware": "5.1.2+13478",
+      "hotend": "stock",
+      "nozzleDiameterMm": 0.4,
+      "maxXySpeedMmS": 100,
+      "maxZSpeedMmS": 8,
+      "accelerationMmS2": 500
+    },
+    "material": {
+      "name": "eSUN PLA Basic",
+      "color": "unspecified",
+      "nozzleC": 210,
+      "bedC": 60,
+      "firstLayerNozzleC": 215,
+      "firstLayerBedC": 60,
+      "maxFlowMm3S": 5,
+      "fanPercent": 100
+    },
+    "foundation": {
+      "enabled": true,
+      "layers": 3,
+      "layerHeightMm": 0.2,
+      "lineWidthMm": 0.45,
+      "speedMmS": 20,
+      "blendHeightMm": 4,
+      "rimTurns": 1
+    },
+    "provenance": {
+      "source": "manual",
+      "filename": "",
+      "digest": "",
+      "slicerVersion": "",
+      "printerProfile": "",
+      "filamentProfile": "",
+      "importedValues": {},
+      "mappedFields": [],
+      "ignoredFields": [],
+      "warnings": []
+    }
+  }
+}

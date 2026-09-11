@@ -24,6 +24,14 @@ export interface PatternContext {
   recipe: Recipe;
   range: BandRange;
   events: ToolpathEvent[];
+  placement?: PatternPlacementSettings;
+}
+
+/** Optional build placement leaves schema-1 recipe coordinates unchanged. */
+export interface PatternPlacementSettings {
+  zOffsetMm: number;
+  /** Smoothly introduces recipe Z/radial offsets over nominal wall height. */
+  startBlendHeightMm: number;
 }
 
 function effectiveRepeats(band: Band): number {
@@ -71,13 +79,27 @@ function point(
   zOffsetMm: number,
 ): Vec3 {
   const heightFraction = fractionAt(context.range, theta);
+  const nominalHeightMm = context.recipe.shape.heightMm * heightFraction;
+  let startBlend = 1;
+  if (context.placement !== undefined) {
+    if (context.placement.startBlendHeightMm === 0) {
+      startBlend = nominalHeightMm === 0 ? 0 : 1;
+    } else {
+      const u = Math.min(1, nominalHeightMm / context.placement.startBlendHeightMm);
+      startBlend = u * u * (3 - 2 * u);
+    }
+  }
   const nominal = shapePointWithRadialOffset(
     context.recipe.shape,
     theta,
     heightFraction,
-    radialOffsetMm,
+    radialOffsetMm * startBlend,
   );
-  return { x: nominal.x, y: nominal.y, z: nominal.z + zOffsetMm };
+  return {
+    x: nominal.x,
+    y: nominal.y,
+    z: nominal.z + (context.placement?.zOffsetMm ?? 0) + zOffsetMm * startBlend,
+  };
 }
 
 function segmentSettings(context: PatternContext, theta: number): { speedMmS: number; flow: number } {

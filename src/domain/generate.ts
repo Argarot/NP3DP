@@ -4,12 +4,15 @@ import {
   estimatePatternEvents,
   generatePattern,
   type BandRange,
+  type PatternPlacementSettings,
 } from './patterns';
 import { minimumNominalRadius, shapePoint } from './shapes';
 import { calculateStats } from './stats';
 
 export const ENGINE_VERSION = '0.1.0';
 const TWO_PI = 2 * Math.PI;
+
+export type GenerationPlacementSettings = PatternPlacementSettings;
 
 function assertFinite(label: string, value: number): void {
   if (!Number.isFinite(value)) throw new RangeError(`${label} must be finite.`);
@@ -131,6 +134,36 @@ function buildRanges(recipe: Recipe): BandRange[] {
   return ranges;
 }
 
+function validatePlacement(placement: GenerationPlacementSettings | undefined): void {
+  if (placement === undefined) return;
+  if (!placement || typeof placement !== 'object') {
+    throw new TypeError('Generation placement must be an object.');
+  }
+  assertFinite('Generation Z offset', placement.zOffsetMm);
+  assertFinite('Generation start blend height', placement.startBlendHeightMm);
+  if (placement.startBlendHeightMm < 0) {
+    throw new RangeError('Generation start blend height cannot be negative.');
+  }
+}
+
+/** Conservative count used by build planning before allocating event arrays. */
+export function estimateToolpathEvents(
+  recipe: Recipe,
+  placement?: GenerationPlacementSettings,
+): number {
+  validateRecipe(recipe);
+  validatePlacement(placement);
+  const ranges = buildRanges(recipe);
+  let estimatedEvents = 0;
+  for (const range of ranges) {
+    estimatedEvents += estimatePatternEvents(recipe, range);
+    if (!Number.isSafeInteger(estimatedEvents) || estimatedEvents > MAX_TOOLPATH_EVENTS) {
+      throw new RangeError(`Toolpath would exceed the ${MAX_TOOLPATH_EVENTS.toLocaleString('en-US')} event limit.`);
+    }
+  }
+  return estimatedEvents;
+}
+
 function commonDiagnostics(): Diagnostic[] {
   return [
     {
@@ -161,22 +194,21 @@ function commonDiagnostics(): Diagnostic[] {
   ];
 }
 
-export function generateToolpath(recipe: Recipe): GeneratedToolpath {
-  validateRecipe(recipe);
+export function generateToolpath(
+  recipe: Recipe,
+  placement?: GenerationPlacementSettings,
+): GeneratedToolpath {
+  estimateToolpathEvents(recipe, placement);
   const recipeKey = JSON.stringify(recipe);
   const ranges = buildRanges(recipe);
-  let estimatedEvents = 0;
-  for (const range of ranges) {
-    estimatedEvents += estimatePatternEvents(recipe, range);
-    if (!Number.isSafeInteger(estimatedEvents) || estimatedEvents > MAX_TOOLPATH_EVENTS) {
-      throw new RangeError(`Toolpath would exceed the ${MAX_TOOLPATH_EVENTS.toLocaleString('en-US')} event limit.`);
-    }
-  }
 
   const events: GeneratedToolpath['events'] = [];
-  let current: Vec3 = shapePoint(recipe.shape, 0, 0);
+  const initial = shapePoint(recipe.shape, 0, 0);
+  let current: Vec3 = placement === undefined
+    ? initial
+    : { x: initial.x, y: initial.y, z: initial.z + placement.zOffsetMm };
   for (const range of ranges) {
-    current = generatePattern({ recipe, range, events }, current);
+    current = generatePattern({ recipe, range, events, placement }, current);
     if (events.length > MAX_TOOLPATH_EVENTS) {
       throw new RangeError(`Toolpath exceeded the ${MAX_TOOLPATH_EVENTS.toLocaleString('en-US')} event limit.`);
     }

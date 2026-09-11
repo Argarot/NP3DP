@@ -1,29 +1,38 @@
 # Using the workbench
 
-Open the [hosted workbench](https://argarot.github.io/NP3DP/) or start the local app with `npm ci` and `npm run dev` using Node 22.12 or later. The local URL is printed in the terminal.
+Open the [hosted workbench](https://argarot.github.io/NP3DP/) or start the local app with `npm ci` and `npm run dev` using Node 22.12 or later.
 
-1. Load **Ripple study** to start with waves, or **Method sampler** to compare all four methods.
-2. Use **Form** to change height, taper, belly, cross-section and twist. These dimensions describe the nominal envelope; motion excursions can extend beyond it.
-3. Use **Deposition** to choose a method and change its sliders. Add height bands to combine methods from bottom to top. Height share is a relative weight, not a millimetre measurement.
-4. Use **Process** for pitch, nominal strand/filament diameters, feed and flow. These values are editable experiments, not a selected/calibrated printer profile.
-5. Compare **Form**, **Nozzle path**, and **Strand model**. Drag to orbit, scroll to zoom, or use Front/Top/Fit. Colour can show method or commanded speed.
-6. Play or scrub the timeline. It includes stationary extrusion and non-extruding holds. Time estimates omit firmware acceleration and physical effects.
-7. **Save recipe** before closing or refreshing. **Open recipe** restores a `.np3dp.json` file. Files in [examples](../examples/) can be versioned through normal Git.
-8. **Motion draft** prepares and audits an inspection file in a background worker. You can inspect its first 100 lines and download the whole `.gcode.txt` or experiment report.
+## Design and inspect
 
-## What the first build does not provide
+1. In **Design**, load **Ripple study** for waves or **Method sampler** for the four deposition families.
+2. Use **Form** controls for height, taper, belly, section and twist. Dimensions describe the nominal contour; bead width and pattern excursions can extend beyond it.
+3. Use **Deposition** for named methods, Z/radial effects, timing and height bands. Height share is a relative weight. **Process** edits pitch, strand/filament diameter, feed and flow.
+4. Compare **Form**, **Nozzle path** and **Strand model**. Drag to orbit, scroll to zoom, use Front/Top/Fit, and colour by method or commanded speed.
+5. Play or scrub the timeline, including stationary extrusion and holds. Commanded time excludes heater waits, probing, homing, acceleration and material behavior.
+6. Save before closing or refreshing. **Save recipe** keeps wall design only; **Save project** or **Save project + print setup** retains recipe, foundation, printer, material and profile provenance. **Open recipe** accepts both file types. There is no automatic browser/cloud save.
 
-The draft is **not a complete print job**. It contains walls only and lacks a base, temperatures, homing, purge, firmware-specific setup and end behavior. Some settings—including the current Ripple study—command Z below the reference plane. Those experiments are diagnosed; no coordinates are silently lifted or clamped. Before printer output, the foundation and machine coordinate strategy must be implemented and verified.
+The geometric strand view does not predict sag, cooling, attachment, collision or actual printer motion. Foundation/transition/rim sections are flattened volume equivalents; walls are circular and stationary deposits spherical. This is a useful geometry baseline, not completion of the required filament simulation.
 
-The strand model shows nominal volume along the commanded path. It does not predict sag, cooling, attachment, collision, actual machine dynamics, or physical print success. Stationary deposits appear as volume-equivalent spheres. Their true shape is unknown. Multi-printer support, integrated lamp hardware, free-space loops and calibrated physical simulation remain required roadmap work.
+## Prepare a complete experiment
 
-## Recovering from input or resource errors
+Choose **Prepare print → Test bench → Load control cup**. It enables the foundation and loads a small conventional spiral. The test retains your current printer, material, filament diameter and flow multiplier; review them in **Printer** and **Design → Process**. **Foundation** controls layers, bead dimensions, speed, pattern lead-in and rim turns.
 
-- A file with missing, unknown or unsupported-version fields is rejected and leaves the current recipe intact.
-- Invalid numerical/shape settings show an error; values are never silently clamped.
-- A job above 100,000 events reports a resource limit. Reduce height/repeats/amplitude or increase pitch, or load another study. The previous generated design remains visible and labelled; draft export waits for a matching result.
-- Extremely small positive motion/extrusion/hold events may be unrepresentable at draft precision. Export reports the event instead of silently deleting it.
-- Unsaved edits are held in memory. Save a recipe file to keep them across page reloads or sessions. Undo/redo applies within the current page.
+Use **Printer → Import PrusaSlicer config** for an optional supported flat `.ini` file. Read the proposed changes and notes before applying them. The [import guide](guides/profile-import.md) describes supported fields and omissions. Undo/redo restores the entire project together.
+
+When the current plan is ready, **Export print** regenerates it and independently audits the final MINI job in a worker. Red errors block the G-code download; settings and the report remain available. The report records assumptions, final command checks and a checksum of the exact G-code. Save all three files together, then follow the [first-print guide](guides/first-print.md).
+
+Complete output currently targets MINI-family Buddy firmware 5.1.2 with stock hotend, 0.4 mm nozzle and 1.75 mm filament. MINI versus MINI+ may remain unknown. The recorded material is eSUN PLA Basic. No recipe has been physically validated yet.
+
+If **Include foundation and finish** is off, the top action remains **Motion draft**. This `.gcode.txt` inspection export contains walls without temperatures, homing, purge or shutdown; it is not a complete job. Original wall studies retain their Z=0.4 mm reference and can intentionally extend below it, with diagnostics. Complete builds use explicit foundation placement and checks.
+
+## Recovery and limits
+
+- Invalid files, unknown versions/fields and invalid geometry leave the current project intact. Values are never silently clamped.
+- A plan above 100,000 events reports a resource error. Reduce height/repeats/amplitude or increase pitch, or load a smaller study. Previous output stays labelled and export waits for a matching result.
+- Tiny positive motion, extrusion or dwell erased by decimal formatting fails export instead of being silently dropped.
+- A full-job limit error identifies its category. Lowering speed/flow or changing geometry is explicit; importing a higher machine limit does not prove physical capability.
+- Profile proposals become stale after another project edit; reimport to review against the current settings.
+- Save project before refreshing. Reloading does not restore unsaved edits. Imported observation logs are not supported; keep them beside the project/report as experiment evidence.
 
 ## Development checks
 
@@ -33,6 +42,9 @@ npm run build
 npx playwright install chromium
 npm run test:e2e
 npm run licenses:check
+npm run calibration
 ```
 
-`npm run examples` refreshes the five versioned example recipes from their source definitions. `npm run measure` records a local single-sample CPU observation; it is not a physical or browser performance guarantee. Browser tests use the built app on port 4173, while development runs on port 5173.
+`npm run calibration` uses the app's compiler to generate four calibration projects, local G-code/reports in `artifacts/session-002/` and a checksum/measurement manifest. `npm run examples` refreshes the five original wall studies. `npm run measure` retains the session-001 wall workload measurement command. Browser tests use the built app on port 4173; development uses 5173.
+
+Free-space loops, accurate filament simulation, integrated lamp hardware and multi-printer compatibility remain required [roadmap](milestones.md) capabilities. See [status](status.md) for the next session and unfinished gates.

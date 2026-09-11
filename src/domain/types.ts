@@ -48,7 +48,7 @@ interface EventBase { bandId: string }
 export interface ExtrudeEvent extends EventBase {
   kind: 'extrude'; from: Vec3; to: Vec3;
   volumeMm3: number; speedMmS: number;
-  role: 'wall' | 'span' | 'rise' | 'fall' | 'transition';
+  role: 'wall' | 'span' | 'rise' | 'fall' | 'transition' | 'foundation' | 'rim';
 }
 export interface TravelEvent extends EventBase {
   kind: 'travel'; from: Vec3; to: Vec3; speedMmS: number;

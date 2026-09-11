@@ -5,7 +5,7 @@
 | ID | Decision | Consequence |
 |---|---|---|
 | D01 | Research and scope first; agree a PRD before implementation. | Completed through discovery; implementation was authorized in D17. |
-| D02 | First test printer is Prusa MINI+, with 0.4 mm nozzle and white or black eSUN PLA. | Start with this combination; firmware, hardware modifications, and exact filament product line still need recording. |
+| D02 | Initial printer was described as MINI+ with 0.4 mm nozzle and white or black eSUN PLA. | Superseded by the more precise hardware facts and variant correction in D21–D22. |
 | D03 | First demonstration is a woven-looking decorative vase with small visible gaps, for dry use or a liner. | This is the first reference object; integrated lamp hardware is a required later capability under D12. |
 | D04 | Distribution model is undecided. | Keep the project license open and evaluate permissive reuse first. |
 | D05 | Use an orchestrating lead and appropriately sized subagents. | Delegate bounded work, then integrate and review it centrally. |
@@ -23,6 +23,10 @@
 | D17 | Start building now; favor adaptable code and long implementation sessions with a visible result each session. | PRD approved for implementation. Deliver working slices while keeping physical and software gates distinct. |
 | D18 | Default low-impact decisions, log and flag them; pause for major impactful choices. | The engineering defaults below are delegated choices, not claims of explicit product-manager selection. |
 | D19 | Update decisions and built status every session, and include the next-session plan in the handoff. | Maintain status.md, session records, milestones and architecture documents alongside code. |
+| D20 | Build the next session and expand toward an actual print. | Implement the setup/foundation/complete-output workflow and prepare concrete calibration files. |
+| D21 | Firmware is 5.1.2+13478, hotend unmodified, filament is eSUN PLA Basic; nozzle remains 0.4 mm. | Target a reviewed adapter for that firmware, with editable material starting values. |
+| D22 | It may be an original MINI rather than MINI+. | Record variant unknown. Shared MINI-family commands are supported; do not infer the probe identity. |
+| D23 | Prepare a small calibration coupon first, then a miniature woven vase. | Control → modest wave → miniature sequence; timed spans are a separate experiment. |
 
 ## Open decisions
 
@@ -30,7 +34,7 @@
 |---|---|---|---|
 | O01 | Wall character | Resolved in D03. | Decorative weave with visible gaps. |
 | O02 | How are individual designs saved? | Resolved in D11. | Recipe files plus ordinary Git workflow. |
-| O03 | Installed firmware, modifications, exact eSUN product line? | Record the actual setup before G1. | These details determine compatible base profiles and additional calibration. No physical defaults have been assumed. |
+| O03 | Installed firmware, modifications, exact eSUN product line? | Resolved by D21; variant remains uncertain under D22. | Sheet, actual spool colour and observed calibration are recorded at print time. Measured printhead envelope is still missing. |
 | O04 | Exact initial cross-section library? | Propose circle, ellipse, and rounded rectangle, with profile handles and twist. | Arbitrary mesh import and multi-contour forms remain separate scope; additional named shapes need test cases. |
 | O05 | Primitive details and diagnostic policy? | Named geometry/process controls, explicit timing and anchor phases, advisory print-failure predictions, no silent clamping; distinguish unresolvable commands and machine limits. | Unrestricted code scripting and uncertain printhead-contact overrides need a specific execution policy. |
 | O06 | First-release export set? | Editable recipe, text G-code, validation report; add nominal shape STL if useful. | A manufacturing-grade mesh of every deposited strand is a substantial separate deliverable. |
@@ -40,9 +44,9 @@
 | O10 | Distribution license and dependency route? | Independently written core and reviewed permissive dependencies while undecided. | Copyleft reuse may require a different distribution plan and license obligations. |
 | O11 | First usable alpha primitive set? | Resolved in D16. | Distinct methods early; sagging/free-space loops and deeper physics in following milestones. |
 | O12 | Simulation accuracy and compute budget? | Agree target observables/tolerances by method/material, with interactive approximation and optional quality solve. | Tighter accuracy may require more calibration and longer compute; external/local solver infrastructure would need approval. |
-| O13 | Second printer for compatibility acceptance? | Choose after the MINI+ baseline; use a meaningfully different profile or firmware when available. | Model/firmware choice changes dialect, motion, clearance and physical-validation work. |
+| O13 | Second printer for compatibility acceptance? | Choose after the MINI-family baseline; use a meaningfully different profile or firmware when available. | Model/firmware choice changes dialect, motion, clearance and physical-validation work. |
 
-No major open decision is approved by passage of time. Hardware details in O03 are still needed at G1; they do not block the editor. O04 and O08 have reversible engineering defaults below. O06 starts with recipe/report and inspection-only text; complete printer output remains required in M2, and nominal STL remains optional.
+No major open decision is approved by passage of time. O03 now records the supplied facts; measured clearance and physical/numerical acceptance still remain at G1/G2. O04 and O08 have reversible engineering defaults below. O06 now includes complete MINI experiment files as well as wall-only drafts; nominal STL remains optional.
 
 ## Logged engineering defaults — session 001
 
@@ -63,3 +67,23 @@ These choices use D18. They can be revisited without changing the approved produ
 | E11 | MIT runtime libraries and OFL font assets, bundled locally; independent generator code; project metadata `private`/`UNLICENSED`. | No upstream slicer algorithms or printer profiles copied. The root distribution license remains the product manager's decision. |
 
 See [architecture](architecture.md), [dependency inventory](dependency-inventory.json), and [third-party notices](../public/THIRD_PARTY_NOTICES.txt).
+
+## Logged engineering defaults — session 002
+
+All choices below use D18 and are revisable. None is a physically validated preset.
+
+| ID | Default taken | Reason and practical limit |
+|---|---|---|
+| E12 | Preserve schema-1 wall recipes; add version-1 project/setup envelopes. Undo snapshots the whole project. | Setup and recipe apply atomically. Legacy files stay editable; saving a wall-only recipe intentionally excludes setup, while Save project retains it. |
+| E13 | Independent MINI Buddy 5.1.2 adapter, stock hotend, 0.4 mm nozzle, 1.75 mm filament; MINI variant may be unknown. | Commands traced to pinned firmware research. Other firmware/hardware blocks full output pending adapter review, without restricting the design editor. |
+| E14 | 215 °C first layer, 210 °C body; bed 60 °C; fan 100% after foundation; maximum flow 5 mm³/s, XY 100 mm/s, Z 8 mm/s, acceleration 500 mm/s². | Editable starting values, not measured limits. eSUN publishes 210–230 °C nozzle/45–60 °C bed; flow, cooling schedule and dynamics require coupon evidence. |
+| E15 | Three 0.2 mm foundation layers, 0.45 mm lines at 20 mm/s; 4 mm pattern lead-in; one rim turn for tests. | Concentric non-circular-capable foundation. Stadium area for foundation/rim, midpoint-gap area for rising transition; full 3D length and recipe flow applied once. |
+| E16 | Foundation off by default for original wall studies; explicit enabling places the wall above its base and ramps Z/radial effects. | Legacy wall generation remains engine 0.1.0; prepared builds record engine 0.2.0. No silent editing of recipe amplitudes; lead-in validation prevents below-foundation excursions. |
+| E17 | Startup waits for a heated-bed target and 170 °C nozzle before homing/mesh; zero bed target explicitly disables heat without a cooling wait, then heats for printing; fixed front purge; controlled retract/lift/park/shutdown. | MINI-family adapter owns machine state. Set relative linear E, reset speed/flow and pressure advance; retain firmware input shaping. No saved firmware configuration writes. |
+| E18 | Import only a bounded, flat configuration subset; review proposals before applying. Store digest, mapped/ignored keys and imported baseline values. | Do not execute macros, copy source credentials, resolve arbitrary inheritance or infer MINI+ from MINIIS. Normal/quiet machine limits use the smaller configured ceiling; multi-extruder ambiguity fails. |
+| E19 | Bed/deposited-width/purge-strip, Z/headroom, XY/Z component speed and flow checks block invalid full output. | Editing freedom is preserved; no geometry or process value is silently clamped. Physical sag/bonding/clearance remain explicit unknowns. Reserve 0.001 mm at XY boundaries for formatting. |
+| E20 | Preview uses volume-equivalent flattened rectangles for foundation/transition/rim; body remains circular and deposits spherical. | Planar first layer reaches the bed. Sloped build beads remain a geometric approximation, without contact or filament physics. |
+| E21 | Control, wave, miniature and separate held-span studies; the latter has a 4 mm conventional collar. | Tiny bridge movements that vanished during G-code rounding were rejected; the specimen was changed without weakening precision checks. |
+| E22 | Final text is independently interpreted and SHA-256 linked to its report. Version small projects; generate larger machine files locally. | Reproducible recipe/setup/audit evidence without committing generated megabyte files. Algorithm provenance is recorded; future engine versions are not promised byte-identical replay. |
+
+Next decisions require actual print observations, agreed predictive-error targets, selected lamp fitting dimensions and a second printer when its milestone starts. No new service, license or guaranteed-success claim was introduced.

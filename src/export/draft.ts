@@ -16,12 +16,25 @@ import {
  * The UI should retain the `.gcode.txt` extension and draft framing.
  */
 export function exportDraft(recipe: Recipe, path: GeneratedToolpath): string {
+  return compileDraft(recipe, path).text;
+}
+
+/** Reuses the same numeric checks for a complete-job adapter. The initial
+ * absolute approach is separate from event groups so the machine adapter can
+ * choose its own clearance/feed without parsing generated text. */
+export function exportAuditedMotion(recipe: Recipe, path: GeneratedToolpath): { approach: string; eventCommands: string[][] } {
+  const { approach, eventCommands } = compileDraft(recipe, path);
+  return { approach, eventCommands };
+}
+
+function compileDraft(recipe: Recipe, path: GeneratedToolpath): { text: string; approach: string; eventCommands: string[][] } {
   const { filamentAreaMm2, expectations } = validateDraftInput(recipe, path);
   const blockingDiagnostic = path.diagnostics.find((diagnostic) => diagnostic.severity === 'error');
   if (blockingDiagnostic) {
     throw new Error(`Draft export is blocked by ${blockingDiagnostic.code}: ${blockingDiagnostic.message}`);
   }
   const first = eventStart(path.events[0]);
+  const approach = `G0 ${formatPosition(first)} F${formatNumber(recipe.process.travelMmS * 60, FEED_DECIMAL_PLACES)}`;
   const lines = [
     '; ================================================================',
     '; DRAFT WALL TOOLPATH — NOT A COMPLETE PRINT JOB',
@@ -43,10 +56,15 @@ export function exportDraft(recipe: Recipe, path: GeneratedToolpath): string {
     'G90',
     'M83',
     'G92 E0',
-    `G0 ${formatPosition(first)} F${formatNumber(recipe.process.travelMmS * 60, FEED_DECIMAL_PLACES)}`,
+    approach,
   ];
 
-  path.events.forEach((event, index) => emitEvent(lines, event, index, filamentAreaMm2));
+  const eventCommands = path.events.map((event, index) => {
+    const commands: string[] = [];
+    emitEvent(commands, event, index, filamentAreaMm2);
+    lines.push(...commands);
+    return commands;
+  });
   lines.push('; END DRAFT WALL TOOLPATH — no machine shutdown or park commands follow.');
   const text = `${lines.join('\n')}\n`;
 
@@ -98,7 +116,7 @@ export function exportDraft(recipe: Recipe, path: GeneratedToolpath): string {
     throw new Error('Draft export coordinates do not match the generated toolpath bounds.');
   }
 
-  return text;
+  return { text, approach, eventCommands };
 }
 
 function emitEvent(lines: string[], event: ToolpathEvent, index: number, filamentAreaMm2: number): void {
