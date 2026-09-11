@@ -34,11 +34,11 @@ The existing geometry editor, four deposition methods, height bands, path/strand
 ## Verification
 
 - Strict TypeScript and **133 unit/integration/geometry tests** passed locally after integration.
-- Seven Chromium journeys cover the original editor and draft workflows plus full-job/project/checksum round trips, reviewed profile application with undo/redo, unsupported-firmware rejection and responsive layout.
-- Production build succeeds. No runtime or development dependencies were added; dependency/license drift checks are required before deployment.
+- Seven Chromium journeys pass and cover the original editor and draft workflows plus full-job/project/checksum round trips, reviewed profile application with undo/redo, unsupported-firmware rejection and responsive layout.
+- Production build and dependency/license drift checks pass locally and in CI. No runtime or development dependencies were added; 105 locked packages and six runtime notices remain inventoried.
 - All four calibration projects compile with zero independent-audit errors. [Measured evidence and checksums](evidence/session-002-calibration.json) records 14,987–68,480 events and roughly 0.45–2.05 seconds per complete local compile in one observation. These are not browser acceptance targets or physical timing measurements.
 - [Independent adapter review](evidence/session-002-audit-review.md) records the mutation checks and remaining physical assumptions. [Firmware research](research/mini-5.1.2-adapter.md) records primary sources and exact revisions.
-- Delivery verification is recorded in the session record once the Pages workflow completes.
+- Implementation commit `adb1ee5` was verified and deployed by [GitHub Actions](https://github.com/Argarot/NP3DP/actions/runs/34651292454). HTTP checks confirm the current `/NP3DP/` entry point, application bundle, lazy viewport and both workers are served successfully. The [session record](sessions/002-printer-workflow.md) retains exact evidence.
 
 ## Known setup and defaults
 

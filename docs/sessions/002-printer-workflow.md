@@ -1,6 +1,6 @@
 # Session 002 — printer workflow and first-print preparation
 
-Status: implemented and locally verified; deployment evidence is appended below. Continue from this record and [current status](../status.md).
+Status: delivered as [engineering preview 0.2](https://argarot.github.io/NP3DP/), with local and CI verification. Continue from this record and [current status](../status.md).
 
 ## Product input
 
@@ -33,6 +33,10 @@ A geometry review found that the rising transition initially used a full-height 
 
 Default temperatures, purge quantity, speeds, flow model, cooling schedule, line contact and printhead clearance remain unvalidated physical choices. Uncertainty is reported without banning arbitrary designs in the editor.
 
+A final sequential-import regression check prevents a new configuration's digest from being paired with old printer/filament identifiers or an old slicer version. Source provenance resets on every imported file while actual resolved setup values remain intact when omitted from the new file. The profile suite now contains 20 tests.
+
+Unheated-bed handling is explicit: a first-layer target of 0 emits heater-off without `M190 R0`, which firmware otherwise treats as a cooling wait until its slope timeout. Positive targets retain their waits; a later body-temperature increase still waits. A regression fixture exercises disabled bed, subsequent heating and rejection of a reintroduced wait-to-zero. Default 60 °C calibration files are unchanged.
+
 ## Verification evidence
 
 - Strict TypeScript: passed.
@@ -51,6 +55,14 @@ Default temperatures, purge quantity, speeds, flow model, cooling schedule, line
 
 Times exclude heating, homing, probing, acceleration and firmware planning. No physical completion time is claimed. Generated files live locally in `artifacts/session-002/`; editable projects are versioned in `examples/calibration/`. Run `npm run calibration` to regenerate using the app's compiler.
 
+## Delivery evidence
+
+Implementation commit `adb1ee5eeaec4cce2140ac7c5774b16a177da074` passed [the full GitHub workflow](https://github.com/Argarot/NP3DP/actions/runs/34651292454) and deployed successfully. The workflow ran dependency/notice checks, strict types, all 133 unit/integration tests, production build and seven browser journeys before Pages publication.
+
+HTTP verification returned 200 for `/NP3DP/`, `index-BTthG0Xm.js`, `Viewport-Ceii2SVG.js`, `generate.worker-BoN7Qa_y.js` and `export.worker-dd5q_g_J.js`. The hosted application bundle contains the new Prepare print workspace. All four local machine files were regenerated in memory using the final compiler and matched their saved text and report SHA-256. No manual printer run or additional manual visual inspection is claimed. The hosted app was queued in the Codex browser panel for handoff.
+
+The local and hosted application source is synchronized through the repository. This documentation follow-up changes evidence only; the physical print gate remains pending.
+
 ## Gate status
 
 G0 remains passed for the independent implementation/dependency route. G1 still lacks agreed numerical targets and measured clearance geometry. G2 awaits an actual control print. The initial material solver, distinct-method physical demonstrations and alpha/release gates remain unfinished. M6–M9 remain required and have not been reduced to optional features.
@@ -60,7 +72,3 @@ G0 remains passed for the independent implementation/dependency route. G1 still 
 Review the first control print and its exact project/report, sheet, spool colour, photos and dimensions. Use the outcome to tune foundation/extrusion and prepare controlled wave comparisons, then the miniature vase. Begin time-ordered contact/clearance checks and a calibrated span/sag baseline, keeping a measured nozzle envelope and physics accuracy targets explicit. Develop free-space-loop sequencing alongside this evidence work. Validate an actual user-exported PrusaSlicer configuration and keep additional printer adapters behind the existing boundary.
 
 Physical tests require the user's printer observations. They are not replaced by software checks, and independent software work can continue while those observations are pending.
-
-A final sequential-import regression check prevents a new configuration's digest from being paired with old printer/filament identifiers or an old slicer version. Source provenance resets on every imported file while actual resolved setup values remain intact when omitted from the new file. The profile suite now contains 20 tests.
-
-Unheated-bed handling is explicit: a first-layer target of 0 emits heater-off without `M190 R0`, which firmware otherwise treats as a cooling wait until its slope timeout. Positive targets retain their waits; a later body-temperature increase still waits. A regression fixture exercises disabled bed, subsequent heating and rejection of a reintroduced wait-to-zero. Default 60 °C calibration files are unchanged.
