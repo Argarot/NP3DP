@@ -1,12 +1,12 @@
 # Implementation status
 
-Updated: 2026-09-11. Session 001 implementation is complete; delivery verification is in progress.
+Updated: 2026-09-11. Session 001 implementation and first hosted delivery are complete.
 
 The product manager approved starting implementation. The agreed PRD scope and required later milestones remain the contract. Low-impact engineering defaults may now proceed when logged; major product decisions still require discussion.
 
 ## Visible result
 
-[NP3DP workbench](https://argarot.github.io/NP3DP/) (first deployment being verified). Local development: `npm ci`, `npm run dev`. [Getting started](getting-started.md) explains the controls and output limits.
+[Open the live NP3DP workbench](https://argarot.github.io/NP3DP/). Local development: `npm ci`, `npm run dev`. [Getting started](getting-started.md) explains the controls and output limits.
 
 The editor has parametric shape/twist controls, four distinct deposition methods, 1–8 height bands, three representation modes, partial-event timeline playback, recipe files/undo, five example studies, and worker-based draft export with an independent numerical audit. This is an engineering preview, not completion of the physically validated alpha.
 
@@ -37,7 +37,8 @@ The editor has parametric shape/twist controls, four distinct deposition methods
 
 - Strict TypeScript and 65 unit/integration/geometry tests pass locally.
 - Four Chromium browser journeys pass: all examples/draft/playback; file round trip and invalid input; rapid-edit/resource-error recovery; desktop/mobile layout.
-- Production build and runtime-notice/dependency drift checks pass; final hosted build verification is tracked below.
+- Production build and runtime-notice/dependency drift checks pass locally and in [GitHub Actions](https://github.com/Argarot/NP3DP/actions/runs/34646268100), which deployed implementation commit `775fd96` successfully.
+- Hosted inspection verified the `/NP3DP/` entry point, lazy 3D viewport, generation worker, Method sampler, and export worker/audit with enabled report/draft controls and no console errors. Download-file assertions pass in Chromium browser tests locally and in CI; the separate embedded-browser download-event check timed out, so receipt of that manual download is not claimed.
 - Optional WebMCP registration, valid recipe update, read-back, invalid-version rejection and unchanged-state behavior were checked through the supported browser interface.
 - [Local measurements](evidence/session-001-measurements.json): 2,851–67,774 events; one observed generation pass approximately 7–125 ms and export including audit 35–1,148 ms. Export runs off the UI thread. These are not firmware or physical-accuracy measurements.
 

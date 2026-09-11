@@ -34,7 +34,8 @@ This is an engineering preview. A wall draft cannot yet be sent to the printer a
 - Browser inspection shows the multi-band study and working camera/controls. Optional WebMCP read/load was validated through the browser, including a rejected future-version recipe that left the design unchanged.
 - Exact lockfile inventory: **105 packages**, including optional platform packages; **six runtime notices**. Runtime licenses are MIT/OFL. Lightning CSS's MPL development dependency is explicitly recorded separately.
 - [Single-pass local measurements](../evidence/session-001-measurements.json) record generation/export timings and event counts. They are observations, not agreed acceptance thresholds or physical predictions.
-- Pages is configured for workflow deployment. Final deployment/CI evidence will be added here after the first source push completes.
+- [Implementation commit `775fd96`](https://github.com/Argarot/NP3DP/commit/775fd96b0483b4ad3606430a0dc0d80a2d9b0276) was pushed to the existing repository. The [verification and Pages workflow](https://github.com/Argarot/NP3DP/actions/runs/34646268100) passed all checks and deployed [the live workbench](https://argarot.github.io/NP3DP/).
+- Hosted browser inspection verified the repository subpath, lazy viewport, generation and export workers, Method sampler, audited draft preview and enabled download controls. No console errors were reported. A manual embedded-browser download-event wait timed out; receipt of that particular download is unconfirmed. Actual download/file-content checks passed in the local and CI Chromium suites.
 
 No hardware printing, motion clearance test, material calibration or physical validation was performed. No G1–G5 physical gate is marked complete.
 
