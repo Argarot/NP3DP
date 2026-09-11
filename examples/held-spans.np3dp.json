@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "name": "Held spans",
+  "shape": {
+    "heightMm": 76,
+    "baseDiameterMm": 76,
+    "topDiameterMm": 82,
+    "bellyMm": 3,
+    "section": "circle",
+    "aspectRatio": 1,
+    "twistDeg": 0
+  },
+  "process": {
+    "pitchMm": 1.6,
+    "strandDiameterMm": 0.6,
+    "filamentDiameterMm": 1.75,
+    "speedMmS": 16,
+    "travelMmS": 65,
+    "flowMultiplier": 1.08
+  },
+  "bands": [
+    {
+      "id": "spans",
+      "kind": "bridge",
+      "weight": 1,
+      "amplitudeMm": 2.2,
+      "repeatsPerTurn": 10,
+      "phaseAdvanceDeg": 0,
+      "radialAmplitudeMm": 1.2,
+      "speedVariation": 0.15,
+      "flowVariation": 0.08,
+      "dwellSeconds": 0.65,
+      "anchorVolumeMm3": 0.36
+    }
+  ]
+}

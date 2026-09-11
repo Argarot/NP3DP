@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "name": "Folded lattice",
+  "shape": {
+    "heightMm": 86,
+    "baseDiameterMm": 72,
+    "topDiameterMm": 88,
+    "bellyMm": 5,
+    "section": "squircle",
+    "aspectRatio": 1.1,
+    "twistDeg": 24
+  },
+  "process": {
+    "pitchMm": 1.35,
+    "strandDiameterMm": 0.52,
+    "filamentDiameterMm": 1.75,
+    "speedMmS": 22,
+    "travelMmS": 80,
+    "flowMultiplier": 1.02
+  },
+  "bands": [
+    {
+      "id": "folds",
+      "kind": "triangle",
+      "weight": 1.2,
+      "amplitudeMm": 1.8,
+      "repeatsPerTurn": 24,
+      "phaseAdvanceDeg": 120,
+      "radialAmplitudeMm": 1,
+      "speedVariation": 0.15,
+      "flowVariation": 0.08,
+      "dwellSeconds": 0.12,
+      "anchorVolumeMm3": 0.08
+    }
+  ]
+}

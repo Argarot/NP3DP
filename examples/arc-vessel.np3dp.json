@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "name": "Arc vessel",
+  "shape": {
+    "heightMm": 92,
+    "baseDiameterMm": 68,
+    "topDiameterMm": 98,
+    "bellyMm": 10,
+    "section": "ellipse",
+    "aspectRatio": 1.25,
+    "twistDeg": -18
+  },
+  "process": {
+    "pitchMm": 1.5,
+    "strandDiameterMm": 0.58,
+    "filamentDiameterMm": 1.75,
+    "speedMmS": 19,
+    "travelMmS": 70,
+    "flowMultiplier": 1.04
+  },
+  "bands": [
+    {
+      "id": "arcs",
+      "kind": "arch",
+      "weight": 1.4,
+      "amplitudeMm": 2.8,
+      "repeatsPerTurn": 16,
+      "phaseAdvanceDeg": 90,
+      "radialAmplitudeMm": 1.4,
+      "speedVariation": 0.15,
+      "flowVariation": 0.08,
+      "dwellSeconds": 0.2,
+      "anchorVolumeMm3": 0.18
+    }
+  ]
+}

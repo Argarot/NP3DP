@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "name": "Method sampler",
+  "shape": {
+    "heightMm": 108,
+    "baseDiameterMm": 78,
+    "topDiameterMm": 96,
+    "bellyMm": 7,
+    "section": "ellipse",
+    "aspectRatio": 1.15,
+    "twistDeg": 30
+  },
+  "process": {
+    "pitchMm": 1.35,
+    "strandDiameterMm": 0.56,
+    "filamentDiameterMm": 1.75,
+    "speedMmS": 20,
+    "travelMmS": 75,
+    "flowMultiplier": 1.03
+  },
+  "bands": [
+    {
+      "id": "sample-wave",
+      "kind": "wave",
+      "weight": 0.9,
+      "amplitudeMm": 1.2,
+      "repeatsPerTurn": 28,
+      "phaseAdvanceDeg": 180,
+      "radialAmplitudeMm": 0.8,
+      "speedVariation": 0.15,
+      "flowVariation": 0.08,
+      "dwellSeconds": 0,
+      "anchorVolumeMm3": 0
+    },
+    {
+      "id": "sample-triangle",
+      "kind": "triangle",
+      "weight": 1,
+      "amplitudeMm": 1.6,
+      "repeatsPerTurn": 22,
+      "phaseAdvanceDeg": 120,
+      "radialAmplitudeMm": 1,
+      "speedVariation": 0.15,
+      "flowVariation": 0.08,
+      "dwellSeconds": 0.12,
+      "anchorVolumeMm3": 0.08
+    },
+    {
+      "id": "sample-arch",
+      "kind": "arch",
+      "weight": 1.1,
+      "amplitudeMm": 2.4,
+      "repeatsPerTurn": 14,
+      "phaseAdvanceDeg": 90,
+      "radialAmplitudeMm": 1.4,
+      "speedVariation": 0.15,
+      "flowVariation": 0.08,
+      "dwellSeconds": 0.2,
+      "anchorVolumeMm3": 0.18
+    },
+    {
+      "id": "sample-bridge",
+      "kind": "bridge",
+      "weight": 0.9,
+      "amplitudeMm": 2,
+      "repeatsPerTurn": 8,
+      "phaseAdvanceDeg": 0,
+      "radialAmplitudeMm": 1.2,
+      "speedVariation": 0.15,
+      "flowVariation": 0.08,
+      "dwellSeconds": 0.5,
+      "anchorVolumeMm3": 0.3
+    }
+  ]
+}

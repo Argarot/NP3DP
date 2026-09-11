@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "name": "Ripple study",
+  "shape": {
+    "heightMm": 70,
+    "baseDiameterMm": 74,
+    "topDiameterMm": 95,
+    "bellyMm": 8,
+    "section": "circle",
+    "aspectRatio": 1,
+    "twistDeg": 0
+  },
+  "process": {
+    "pitchMm": 1.2,
+    "strandDiameterMm": 0.55,
+    "filamentDiameterMm": 1.75,
+    "speedMmS": 24,
+    "travelMmS": 80,
+    "flowMultiplier": 1
+  },
+  "bands": [
+    {
+      "id": "ripple",
+      "kind": "wave",
+      "weight": 1,
+      "amplitudeMm": 1.2,
+      "repeatsPerTurn": 28,
+      "phaseAdvanceDeg": 180,
+      "radialAmplitudeMm": 0.8,
+      "speedVariation": 0.15,
+      "flowVariation": 0.08,
+      "dwellSeconds": 0,
+      "anchorVolumeMm3": 0
+    }
+  ]
+}

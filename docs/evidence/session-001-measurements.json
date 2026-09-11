@@ -1,0 +1,149 @@
+{
+  "measuredAt": "2026-09-11T20:35:17.355Z",
+  "node": "v22.23.2",
+  "platform": "win32",
+  "sampleCount": 1,
+  "scope": "Single local CPU observation, not an acceptance target or browser/firmware timing measurement.",
+  "studies": [
+    {
+      "id": "ripple-study",
+      "events": 56676,
+      "generationMs": 124.65,
+      "exportWithAuditMs": 889.44,
+      "draftBytes": 2650190,
+      "stats": {
+        "pathLengthMm": 20267.119026754233,
+        "extrusionVolumeMm3": 4817.12306884072,
+        "filamentLengthMm": 2002.7270475441662,
+        "commandedDurationS": 853.5810747509491,
+        "extrudeMoves": 56676,
+        "travelMoves": 0,
+        "dwellCount": 0,
+        "bounds": {
+          "min": {
+            "x": -51.754143680040876,
+            "y": -51.73873469818305,
+            "z": -0.7235246274509117
+          },
+          "max": {
+            "x": 51.68558657863382,
+            "y": 51.73178410324701,
+            "z": 71.54384828742262
+          }
+        }
+      }
+    },
+    {
+      "id": "folded-lattice",
+      "events": 3101,
+      "generationMs": 12.16,
+      "exportWithAuditMs": 59.83,
+      "draftBytes": 146766,
+      "stats": {
+        "pathLengthMm": 20045.957652544952,
+        "extrusionVolumeMm3": 4341.696910739778,
+        "filamentLengthMm": 1805.0678197578377,
+        "commandedDurationS": 921.8026543583189,
+        "extrudeMoves": 3101,
+        "travelMoves": 0,
+        "dwellCount": 0,
+        "bounds": {
+          "min": {
+            "x": -50.6623329726317,
+            "y": -47.88806693580935,
+            "z": 0.4
+          },
+          "max": {
+            "x": 50.63595372670795,
+            "y": 47.89560683774825,
+            "z": 88.10993150684885
+          }
+        }
+      }
+    },
+    {
+      "id": "arc-vessel",
+      "events": 67774,
+      "generationMs": 63.62,
+      "exportWithAuditMs": 1147.62,
+      "draftBytes": 3157336,
+      "stats": {
+        "pathLengthMm": 18328.31236917018,
+        "extrusionVolumeMm3": 5053.654287662622,
+        "filamentLengthMm": 2101.065301052232,
+        "commandedDurationS": 969.3263371041793,
+        "extrudeMoves": 67774,
+        "travelMoves": 0,
+        "dwellCount": 0,
+        "bounds": {
+          "min": {
+            "x": -53.63992662695877,
+            "y": -43.74503632402378,
+            "z": 0.4
+          },
+          "max": {
+            "x": 53.64369816891469,
+            "y": 43.75698104525165,
+            "z": 95.09230769230768
+          }
+        }
+      }
+    },
+    {
+      "id": "held-spans",
+      "events": 2851,
+      "generationMs": 6.5,
+      "exportWithAuditMs": 35.09,
+      "draftBytes": 103812,
+      "stats": {
+        "pathLengthMm": 14883.982719681722,
+        "extrusionVolumeMm3": 4503.180137436624,
+        "filamentLengthMm": 1872.204743853138,
+        "commandedDurationS": 1375.7300736911347,
+        "extrudeMoves": 1425,
+        "travelMoves": 0,
+        "dwellCount": 475,
+        "bounds": {
+          "min": {
+            "x": -43.85316954888546,
+            "y": -41.70695632895578,
+            "z": 0.4
+          },
+          "max": {
+            "x": 43.852537117716906,
+            "y": 41.7062542019813,
+            "z": 78.44
+          }
+        }
+      }
+    },
+    {
+      "id": "method-sampler",
+      "events": 41534,
+      "generationMs": 64.01,
+      "exportWithAuditMs": 703.63,
+      "draftBytes": 1933051,
+      "stats": {
+        "pathLengthMm": 24963.684612300214,
+        "extrusionVolumeMm3": 6304.911656908328,
+        "filamentLengthMm": 2621.277664534655,
+        "commandedDurationS": 1373.8660833059828,
+        "extrudeMoves": 41086,
+        "travelMoves": 0,
+        "dwellCount": 149,
+        "bounds": {
+          "min": {
+            "x": -51.80512857736071,
+            "y": -46.4419434479253,
+            "z": -0.7145304520834277
+          },
+          "max": {
+            "x": 51.84041678077334,
+            "y": 46.464054501205645,
+            "z": 110.31490384615383
+          }
+        }
+      }
+    }
+  ]
+}
