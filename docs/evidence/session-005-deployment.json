@@ -1,0 +1,120 @@
+{
+  "verifiedAt": "2026-09-12T13:24:48.629Z",
+  "implementationCommit": "be0609ecf46674b2d5480f811dd8ce1ffe251a74",
+  "workflowUrl": "https://github.com/Argarot/NP3DP/actions/runs/34696255162",
+  "base": "https://argarot.github.io/NP3DP/",
+  "checks": [
+    {
+      "file": "index.html",
+      "status": 200,
+      "bytes": 690,
+      "sha256": "7d75024f3a3fee5c079595c0092b767176a45964d832580e870ec99751923a85",
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/export.worker-CFGAz9Q0.js",
+      "status": 200,
+      "bytes": 109542,
+      "sha256": "cde1e58ae5733a74204d6a30b846e1b254c34fa1f85a0f8764f3d68ddf9bdaf4",
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/generate.worker-gnaiXM_p.js",
+      "status": 200,
+      "bytes": 47990,
+      "sha256": "a0b86cbea67d73a18b879a6acc42e556316b4aca5a0cdf6df22d2b82b8f77aec",
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/index-B8M9G3dF.js",
+      "status": 200,
+      "bytes": 313664,
+      "sha256": "4ff699ffbb2d55a4ee522a554c11531624d7a980851200c153c773f13fc8b5c0",
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/index-D__JWI1H.css",
+      "status": 200,
+      "bytes": 22779,
+      "sha256": "44752037a934920e209d27e2ade50cb91f99d25e0afcfa39fcb9a511d6157d0f",
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/Viewport-DnkMjYbV.js",
+      "status": 200,
+      "bytes": 573565,
+      "sha256": "ea893e4af701bf8d07060e751c8f48cfdcf9b7d1738342d87fe1b3b524dc5f9c",
+      "matchesLocal": true
+    },
+    {
+      "file": "print-tests/session-005/07-mini-vase-b.gcode",
+      "status": 200,
+      "bytes": 1187895,
+      "sha256": "1f2536be57434ce92282252cd9f67caf0435015e760e3bdcd4d2860b86c48a49",
+      "matchesLocal": true
+    },
+    {
+      "file": "print-tests/session-005/07-mini-vase-b.np3dp-project.json",
+      "status": 200,
+      "bytes": 1889,
+      "sha256": "b51f0103406ac078063f4f0bf1e47ad32d7e9c35b34efcdd71062cdbacdd496a",
+      "matchesLocal": true
+    },
+    {
+      "file": "print-tests/session-005/07-mini-vase-b.print-report.json",
+      "status": 200,
+      "bytes": 39219,
+      "sha256": "2d4241996f79476720446bd4f88fa392a912aecef73af13402a736fb50754ad8",
+      "matchesLocal": true
+    },
+    {
+      "file": "print-tests/session-005/08-arch-coupon.gcode",
+      "status": 200,
+      "bytes": 1108259,
+      "sha256": "2698112ece0a2e20a0872b5bea426ad0c0b25247176d4f896690dfc913c88411",
+      "matchesLocal": true
+    },
+    {
+      "file": "print-tests/session-005/08-arch-coupon.np3dp-project.json",
+      "status": 200,
+      "bytes": 2218,
+      "sha256": "5bc446fa9519415f73ad7323324dfd5011257bf74b0602a07c9b90d2194d5d3f",
+      "matchesLocal": true
+    },
+    {
+      "file": "print-tests/session-005/08-arch-coupon.print-report.json",
+      "status": 200,
+      "bytes": 25265,
+      "sha256": "33014ca1aa89b60d72515a14b4e3b5a12ca790a1aee06f017384adf957c35794",
+      "matchesLocal": true
+    },
+    {
+      "file": "print-tests/session-005/09-held-span-v2.gcode",
+      "status": 200,
+      "bytes": 798288,
+      "sha256": "e2e51026b4a6c0211fab952da643b55a97a6d3d50fd83c355e7e2a90bdb5977d",
+      "matchesLocal": true
+    },
+    {
+      "file": "print-tests/session-005/09-held-span-v2.np3dp-project.json",
+      "status": 200,
+      "bytes": 2222,
+      "sha256": "b7f6fc8fb4710ac445a4ea17dc16a55590f9606969cb033c44eb8a683152a68a",
+      "matchesLocal": true
+    },
+    {
+      "file": "print-tests/session-005/09-held-span-v2.print-report.json",
+      "status": 200,
+      "bytes": 25709,
+      "sha256": "2c957cba32220c73cb49ff3f5efad8cc3946811689be4fabc050f69aba9df3d0",
+      "matchesLocal": true
+    },
+    {
+      "file": "print-tests/session-005/manifest.json",
+      "status": 200,
+      "bytes": 82368,
+      "sha256": "3a21c82156e1577c1bd750e3b39cc19e7a134eb92925a910f6314598ad985843",
+      "matchesLocal": true
+    }
+  ]
+}

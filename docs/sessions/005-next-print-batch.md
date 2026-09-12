@@ -27,6 +27,8 @@ Final local checks pass: TypeScript, 186 tests / 16 files in 31.17 seconds, prod
 
 Team ownership: lead studies, core phase correction, integration/UI, regression/delivery checks and documentation; Sol emitted-path inspector/tests; Sol independent method geometry/sequence review; Terra batch CLI. Source/profile code was not vendored.
 
+Published implementation [be0609e](https://github.com/Argarot/NP3DP/commit/be0609ecf46674b2d5480f811dd8ce1ffe251a74) passed [GitHub CI and Pages deployment](https://github.com/Argarot/NP3DP/actions/runs/34696255162). Post-deployment checks verify 16 live resources against local production bytes, including all three G-code files, projects, reports and manifest; see [deployment evidence](../evidence/session-005-deployment.json). The development server was stopped after verification. GitHub Pages hosting and the license decision remain unchanged.
+
 ## Next session
 
 1. Record the actual 07–09 results against their filenames/settings and reports; compare shape, endpoints and elapsed time.
