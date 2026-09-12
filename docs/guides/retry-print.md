@@ -1,6 +1,8 @@
-# Attachment retry — print A next
+# Attachment retry — A/B reference procedure
 
-The product manager printed the original session-002 files unchanged: **01 control worked; 02 wave detached**. Later files were not printed. The photo shows an intact base with loose coils; it does not provide measured temperatures, dimensions or an executed-motion trace.
+**Follow-up, 12 September 2026:** the product manager reports A and B work well, and preview/time estimate work. [Recorded feedback](../evidence/session-004-observations.json). The sequence below remains the procedure for reproducing those references. A revised miniature and separate arch/held-span comparison are next build work; original 03/04 have not been reworked. Actual estimate accuracy and dimensional compensation remain unmeasured.
+
+The product manager printed the original session-002 files unchanged: **01 control worked; 02 wave detached**. Later files were not printed at that point. The photo shows an intact base with loose coils; it does not provide measured temperatures, dimensions or an executed-motion trace.
 
 The original wave had 0.60 mm rise per revolution and a nominal 0.45 mm strand. Its 4 mm amplitude lead-in left the second revolution entirely above nominal attachment range. Slower motion or more fan cannot repair that missing geometric contact by themselves. [Diagnosis and primary research](../research/wave-attachment.md).
 
@@ -10,8 +12,8 @@ Open [NP3DP](https://argarot.github.io/NP3DP/), then **Prepare print → Load re
 
 | File | Rise/turn | Wave amplitude | Wall speed | Use |
 |---|---:|---:|---:|---|
-| `05-retry-a-attachment.gcode` | 0.30 mm | 0.08 mm | 6 mm/s | Next physical test; early turns have nominal support |
-| `06-retry-b-openings.gcode` | 0.40 mm | 0.12 mm | 6 mm/s | Only after A attaches; wider unsupported windows |
+| `05-retry-a-attachment.gcode` | 0.30 mm | 0.08 mm | 6 mm/s | Reported successful; first reference for reproducing the comparison |
+| `06-retry-b-openings.gcode` | 0.40 mm | 0.12 mm | 6 mm/s | Reported successful; wider unsupported windows, compare after A |
 
 Both have a 34 mm circular wall, 12 mm wall height, nominal 0.45 mm strand, three 0.2 mm foundation layers, 4 mm lead-in and one rim. The new files use **0.15 mm first-layer inset**, 215 → 210 °C nozzle, 60 °C bed, and fan off for the foundation then 100%. The app preserves current material/printer settings when loading a study, so review them before exporting. Loading an old project preserves its **zero** compensation until changed explicitly.
 

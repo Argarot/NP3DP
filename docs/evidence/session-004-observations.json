@@ -1,0 +1,39 @@
+{
+  "recordedAt": "2026-09-12",
+  "evidenceKind": "product-manager report",
+  "report": "both A and B work well. Preview and time estimate work as well.",
+  "fileIdentity": "A/B identify the retry studies. Delivered hashes below are references; this follow-up did not separately confirm the printed files or whether settings changed.",
+  "observations": [
+    {
+      "id": "retry-a",
+      "deliveredFilename": "05-retry-a-attachment.gcode",
+      "deliveredReferenceSha256": "80db73b43e399267d49157fe7a9bef6a6080fbf2648b0faf63e4c7101e2a0085",
+      "reportedResult": "works well",
+      "printedFileSha256": null,
+      "settingsChanges": "not reported",
+      "runCount": null,
+      "measurements": null
+    },
+    {
+      "id": "retry-b",
+      "deliveredFilename": "06-retry-b-openings.gcode",
+      "deliveredReferenceSha256": "aa3240bdbb258beb41400503927175751d6ad37f33c5d327db0a7923527aa5be",
+      "reportedResult": "works well",
+      "printedFileSha256": null,
+      "settingsChanges": "not reported",
+      "runCount": null,
+      "measurements": null
+    }
+  ],
+  "printerDisplay": {
+    "preview": "reported working",
+    "timeEstimateDisplay": "reported working",
+    "elapsedTimeAccuracy": "not measured",
+    "progressPercentage": "not explicitly reported"
+  },
+  "purgeExecution": "not explicitly reported",
+  "fanExecution": "not explicitly reported",
+  "elephantFootDimensions": "not measured",
+  "otherStudyResults": "No new results reported for original 03 miniature or 04 held-span.",
+  "interpretation": "A/B provide reported successful wave recipes. This does not establish repeatability, measured clearance or calibrated filament prediction, and does not validate different geometries or deposition methods."
+}

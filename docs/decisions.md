@@ -94,7 +94,7 @@ The product manager requested attachment fixes, LCD preview/progress, elephant-f
 
 | ID | Default taken | Reason and practical limit |
 |---|---|---|
-| E23 | Preserve original studies; add explicit A/B retries at 0.30/0.40 mm pitch, 0.08/0.12 mm amplitude and 6 mm/s. Retain 100% wall fan and existing temperatures. | Original wave's startup had a whole turn without nominal support. Reduce baseline separation before adding larger unsupported windows. A/B remain physically untested. No arbitrary deep plunge or centreline crossing was added. |
+| E23 | Preserve original studies; add explicit A/B retries at 0.30/0.40 mm pitch, 0.08/0.12 mm amplitude and 6 mm/s. Retain 100% wall fan and existing temperatures. | Original wave's startup had a whole turn without nominal support. Reduce baseline separation before adding larger unsupported windows. A/B were untested at delivery and subsequently reported successful; see session 004. No arbitrary deep plunge or centreline crossing was added. |
 | E24 | Project/setup schema 2 adds 0–0.5 mm first-layer inset; new setups 0.15 mm, v1 migration 0 mm. | Preserve old experiment intent. Inset all first-layer rings; higher layers remain nominal. Circle offset is exact; other supported convex outlines use sampled perpendicular offset. Prusa's [compensation guidance](https://help.prusa3d.com/article/elephant-foot-compensation_114487) motivates an editable inset; 0.15 mm is a proposed calibration default. |
 | E25 | Restricted circular-wave nominal contact estimator, capped at 512 turns / approximately 250k intervals. | Exposes the startup failure in the UI/report. Same-angle gap versus nominal diameter is an estimate of geometry, not a physical solver. General shapes/material contact remain unfinished. |
 | E26 | MINI LCD QOI pair 220×124 and 200×240, deterministic worker rasterizer, bounded prefix. Final-text M73 P/R every ~30 commanded seconds and after waits; positive minutes round up. | Pinned firmware requires QOI for these screens. ETA excludes thermal/probing/firmware dynamics. Initial duration also appears in header/footer metadata. Network/Connect PNG previews are separate from this LCD fix. |
@@ -104,3 +104,11 @@ The product manager requested attachment fixes, LCD preview/progress, elephant-f
 Control 01 is one reported success; wave 02 is one reported failure. Neither constitutes repeatability, measured clearance or calibrated prediction. The unknown MINI/MINI+ variant and existing physical-accuracy/hardware decisions remain open.
 
 E24 refinement: squircle contours now use adaptive phase tables shared by emission and preflight, including shifted rim seams after partial wall turns. The prior uniform-angle estimate produced multi-millimetre segments near squircle axes. Non-circular prepared geometry therefore changes with engine 0.3; historical exact machine files remain the replay record. Circle retry G-code bytes were verified unchanged by this refinement.
+
+## Logged engineering defaults — session 004 feedback
+
+| ID | Default taken | Reason and practical limit |
+|---|---|---|
+| E29 | With A/B now reported successful, recommend a new miniature derived from B, followed by a separate anchored-arch/held-span comparison. Preserve 01–06 and assign new identifiers; implementation is next-session work. | Reversible staging under D18. Introduce shape variation without immediately jumping to original 03's 0.60 mm amplitude. Changing-radius contact needs its own review; wave success does not validate held spans. No new physical-accuracy or scope commitment. |
+
+The [session-004 observation](evidence/session-004-observations.json) records working A/B prints and preview/time display. Exact file identity, dimensions, elapsed-time accuracy and repeatability remain unconfirmed; this feedback does not close G1–G5.

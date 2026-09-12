@@ -2,6 +2,8 @@
 
 Date: 12 September 2026. App/prepared engine 0.3.0, MINI adapter `mini-5.1.2/2`, recipe schema 1, project/setup schema 2.
 
+Subsequent feedback: A/B and printer preview/time display are now reported working; see [session 004](004-retry-feedback.md). This record preserves the implementation and evidence available at delivery.
+
 ## Evidence and diagnosis
 
 The product manager confirms original calibration files were printed unchanged. Control 01 worked in one reported observation; wave 02 detached, and later studies were not attempted. Preserve session-002 projects, machine files and manifests as historical inputs. The failure photo remains supplied conversation evidence, not a calibrated measurement.
