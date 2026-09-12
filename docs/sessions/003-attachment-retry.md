@@ -34,6 +34,8 @@ Eight Chromium workflows pass in 37.8 seconds, including the retry/compensation/
 
 Team ownership: lead integration and adapter/audit/UI/docs; Sol firmware metadata and independent display review; Sol attachment research and geometry review; Terra foundation/inset and bounded contour refinement. Contributions stayed outside the app checkout until lead review/integration.
 
+Implementation commit [f76cfa4ae95260b82f3d7b21a6fb78e863b34808](https://github.com/Argarot/NP3DP/commit/f76cfa4ae95260b82f3d7b21a6fb78e863b34808) passed the full CI build/browser/license workflow and Pages deployment in [run 34687857110](https://github.com/Argarot/NP3DP/actions/runs/34687857110). Post-deployment HTTP checks returned 200 for the entry, main JS/CSS, viewport and both workers; all five asset byte hashes matched the final local production output. The task-owned development server was stopped after verification. GitHub Pages hosting was preserved as explicitly requested.
+
 G0 remains passed for the selected independent-code route. G1–G5 remain open: the reported control is useful evidence but does not satisfy unagreed numerical thresholds, repeatability, printhead clearance or predictive accuracy. The failed wave is recorded as failed. M6–M9 remain required.
 
 ## Next session

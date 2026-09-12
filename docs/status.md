@@ -39,6 +39,7 @@ The new test bench highlights the failed original wave, A/B retries and nominal 
 - Tests cover generated turn gaps, v1 migration, first-layer geometry/continuity, QOI decoding/framing, purge omissions, wrong/missing metadata and progress ordering/timing. These are software checks.
 - [Display research](research/mini-display-metadata.md), [attachment research](research/wave-attachment.md) and [purge review](research/mini-purge.md) record primary sources and transfer limits.
 - [Independent review](evidence/session-003-review.md) checks the actual delivered payloads and command timeline. All 103 local Markdown links checked resolve. The failure photo remains in ignored local artifacts.
+- Implementation commit [f76cfa4](https://github.com/Argarot/NP3DP/commit/f76cfa4ae95260b82f3d7b21a6fb78e863b34808) passed CI and deployed through [GitHub Actions](https://github.com/Argarot/NP3DP/actions/runs/34687857110). The live entry point, main JS/CSS, viewport and both workers return HTTP 200; their deployed bytes match the validated local production build.
 
 ## Setup and defaults
 
