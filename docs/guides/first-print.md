@@ -1,6 +1,6 @@
 # First supervised print on the Prusa MINI family
 
-**Updated after the retries:** the original control succeeded; the original wave failed attachment. A/B retries and printer preview/time display are subsequently reported working; use the [retry guide](retry-print.md) to reproduce those references. Revised miniature and held-span studies are next build work. The original sequence below is historical setup context; do not resume the old wave file. The calibration command generates session-003 retries while preserving original files.
+**Updated after the retries:** the original control succeeded; the original wave failed attachment. A/B retries and printer preview/time display are subsequently reported working. The [new 07–09 print guide](next-prints.md) is the current test sequence; the [retry guide](retry-print.md) retains A/B instructions. The original sequence below is historical setup context; do not resume the old wave file. The calibration command now generates session-005 studies while preserving original files.
 
 This guide covers NP3DP's first physical experiments on a stock-hotend Prusa MINI or MINI+ with a 0.4 mm nozzle, Buddy firmware `5.1.2+13478`, and eSUN PLA Basic. The exact MINI-family variant is still unknown. Leave it as **MINI / MINI+ — uncertain** in the app until the printer label or purchase record resolves it; the reviewed 5.1.2 command adapter is shared by both variants.
 

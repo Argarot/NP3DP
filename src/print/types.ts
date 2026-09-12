@@ -1,5 +1,6 @@
 import type { GeneratedToolpath, Recipe } from '../domain/types';
 import type { WaveAttachmentReport } from './attachment';
+import type { MatchedRevolutionPathContactReport } from './pathContact';
 
 /** Print setup is deliberately separate from schema-1 wall recipe semantics. */
 export interface FoundationSettings {
@@ -76,6 +77,7 @@ export interface PreparedBuild {
   wallOffsetZMm: number;
   stages: PrintStage[];
   attachment?: WaveAttachmentReport;
+  pathContact?: MatchedRevolutionPathContactReport;
 }
 
 export interface JobDiagnostic {

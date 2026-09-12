@@ -268,7 +268,7 @@ describe('generateToolpath', () => {
     const second = generateToolpath(input);
     expect(first).toEqual(second);
     expect(first.recipeKey).toBe(JSON.stringify(input));
-    expect(first.engineVersion).toBe('0.1.0');
+    expect(first.engineVersion).toBe('0.2.0');
   });
 
   it('uses phase advance, radial, speed and local flow controls', () => {

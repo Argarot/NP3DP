@@ -49,6 +49,7 @@ export function compilePrintJob(recipeInput: Recipe, setupInput: PrintSetup): Pr
     buildKey: build.buildKey, wallOffsetZMm: build.wallOffsetZMm, stages: build.stages,
     commandMetrics: inspected.metrics, toolpathStats: build.path.stats, diagnostics, audit,
     attachment: build.attachment,
+    pathContact: build.pathContact,
     printerDisplay: { thumbnails: ['220x124/QOI', '200x240/QOI'], progress: 'M73 P/R, command-time estimate refreshed every 30 commanded seconds and after thermal/probe waits' },
     outputStatus: text ? 'software-checked-experimental-job' : 'blocked',
     physicalStatus: 'unprinted; no nozzle-clearance or calibrated material simulation',

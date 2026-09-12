@@ -1,0 +1,801 @@
+{
+  "format": "np3dp-print-report",
+  "schemaVersion": 1,
+  "engineVersion": "0.4.0",
+  "adapterVersion": "mini-5.1.2/2",
+  "project": {
+    "format": "np3dp-project",
+    "schemaVersion": 2,
+    "recipe": {
+      "schemaVersion": 1,
+      "name": "09 Held span V2",
+      "shape": {
+        "heightMm": 10.2,
+        "baseDiameterMm": 32,
+        "topDiameterMm": 32,
+        "bellyMm": 0,
+        "section": "circle",
+        "aspectRatio": 1,
+        "twistDeg": 0
+      },
+      "process": {
+        "pitchMm": 0.3,
+        "strandDiameterMm": 0.45,
+        "filamentDiameterMm": 1.75,
+        "speedMmS": 6,
+        "travelMmS": 60,
+        "flowMultiplier": 1
+      },
+      "bands": [
+        {
+          "id": "method-collar",
+          "kind": "wave",
+          "weight": 7,
+          "amplitudeMm": 0,
+          "repeatsPerTurn": 24,
+          "phaseAdvanceDeg": 0,
+          "radialAmplitudeMm": 0,
+          "speedVariation": 0,
+          "flowVariation": 0,
+          "dwellSeconds": 0,
+          "anchorVolumeMm3": 0
+        },
+        {
+          "id": "timed-chords",
+          "kind": "bridge",
+          "weight": 10,
+          "amplitudeMm": 0,
+          "repeatsPerTurn": 24,
+          "phaseAdvanceDeg": 0,
+          "radialAmplitudeMm": 0,
+          "speedVariation": 0,
+          "flowVariation": 0,
+          "dwellSeconds": 0.1,
+          "anchorVolumeMm3": 0.02
+        }
+      ]
+    },
+    "setup": {
+      "schemaVersion": 2,
+      "printer": {
+        "adapter": "prusa-mini-buddy-5.1.2",
+        "variant": "unknown",
+        "firmware": "5.1.2+13478",
+        "hotend": "stock",
+        "nozzleDiameterMm": 0.4,
+        "maxXySpeedMmS": 100,
+        "maxZSpeedMmS": 8,
+        "accelerationMmS2": 500
+      },
+      "material": {
+        "name": "eSUN PLA Basic",
+        "color": "unspecified",
+        "nozzleC": 210,
+        "bedC": 60,
+        "firstLayerNozzleC": 215,
+        "firstLayerBedC": 60,
+        "maxFlowMm3S": 5,
+        "fanPercent": 100
+      },
+      "foundation": {
+        "enabled": true,
+        "layers": 3,
+        "layerHeightMm": 0.2,
+        "lineWidthMm": 0.45,
+        "speedMmS": 20,
+        "blendHeightMm": 4,
+        "rimTurns": 1,
+        "elephantFootMm": 0.15
+      },
+      "provenance": {
+        "source": "manual",
+        "filename": "",
+        "digest": "",
+        "slicerVersion": "",
+        "printerProfile": "",
+        "filamentProfile": "",
+        "importedValues": {},
+        "mappedFields": [],
+        "ignoredFields": [],
+        "warnings": []
+      }
+    }
+  },
+  "buildKey": "{\"recipe\":{\"schemaVersion\":1,\"name\":\"09 Held span V2\",\"shape\":{\"heightMm\":10.2,\"baseDiameterMm\":32,\"topDiameterMm\":32,\"bellyMm\":0,\"section\":\"circle\",\"aspectRatio\":1,\"twistDeg\":0},\"process\":{\"pitchMm\":0.3,\"strandDiameterMm\":0.45,\"filamentDiameterMm\":1.75,\"speedMmS\":6,\"travelMmS\":60,\"flowMultiplier\":1},\"bands\":[{\"id\":\"method-collar\",\"kind\":\"wave\",\"weight\":7,\"amplitudeMm\":0,\"repeatsPerTurn\":24,\"phaseAdvanceDeg\":0,\"radialAmplitudeMm\":0,\"speedVariation\":0,\"flowVariation\":0,\"dwellSeconds\":0,\"anchorVolumeMm3\":0},{\"id\":\"timed-chords\",\"kind\":\"bridge\",\"weight\":10,\"amplitudeMm\":0,\"repeatsPerTurn\":24,\"phaseAdvanceDeg\":0,\"radialAmplitudeMm\":0,\"speedVariation\":0,\"flowVariation\":0,\"dwellSeconds\":0.1,\"anchorVolumeMm3\":0.02}]},\"foundation\":{\"enabled\":true,\"layers\":3,\"layerHeightMm\":0.2,\"lineWidthMm\":0.45,\"speedMmS\":20,\"blendHeightMm\":4,\"rimTurns\":1,\"elephantFootMm\":0.15}}",
+  "wallOffsetZMm": 0.4,
+  "stages": [
+    {
+      "kind": "foundation",
+      "startEvent": 0,
+      "endEvent": 9738
+    },
+    {
+      "kind": "transition",
+      "startEvent": 9738,
+      "endEvent": 9906
+    },
+    {
+      "kind": "wall",
+      "startEvent": 9906,
+      "endEvent": 17203
+    },
+    {
+      "kind": "rim",
+      "startEvent": 17203,
+      "endEvent": 17371
+    }
+  ],
+  "commandMetrics": {
+    "maximumXySpeedMmS": 20,
+    "maximumZSpeedMmS": 2,
+    "maximumFlowMm3S": 1.628318530717959,
+    "minimumZMm": 0.2,
+    "maximumZMm": 11.2
+  },
+  "toolpathStats": {
+    "pathLengthMm": 9222.440345079745,
+    "extrusionVolumeMm3": 1021.3488810714682,
+    "filamentLengthMm": 424.6275214208014,
+    "commandedDurationS": 917.5331408884905,
+    "extrudeMoves": 15927,
+    "travelMoves": 3,
+    "dwellCount": 480,
+    "bounds": {
+      "min": {
+        "x": -16,
+        "y": -16,
+        "z": 0.2
+      },
+      "max": {
+        "x": 16,
+        "y": 16,
+        "z": 11.2
+      }
+    }
+  },
+  "diagnostics": [
+    {
+      "severity": "info",
+      "code": "printer.variant",
+      "message": "MINI versus MINI+ is unconfirmed. The adapter uses shared MINI-family firmware commands; probe behaviour remains the installed firmware’s responsibility."
+    },
+    {
+      "severity": "warning",
+      "code": "physical.untested",
+      "message": "This newly generated job has no recorded physical result. The original control and A/B retries were reported successful; changed shapes or deposition methods require their own print observations."
+    },
+    {
+      "severity": "warning",
+      "code": "clearance.unknown",
+      "message": "Bed and commanded-speed checks do not prove nozzle/fan-duct clearance or attachment to previous strands. Non-planar contact remains unmodelled."
+    },
+    {
+      "severity": "info",
+      "code": "motion.commanded",
+      "message": "Speed, flow and duration are command-based estimates. Acceleration, pressure history, cooling, probe motion and thermal waits are not simulated."
+    }
+  ],
+  "audit": {
+    "errors": [],
+    "moveCount": 16421,
+    "bodyMoveCount": 16411,
+    "bodyExtrusionMm": 424.61864000006966,
+    "bodyDwellSeconds": 48.00000000000041,
+    "depositedFilamentMm": 442.61864000007046,
+    "commandedSeconds": 937.1532547797882,
+    "maximumFlowMm3S": 4.489859500755412,
+    "shutdownComplete": true,
+    "startupExtrusionMm": 18,
+    "purgeComplete": true,
+    "progressUpdates": 37
+  },
+  "attachment": {
+    "applicable": false,
+    "reasons": [
+      "Exactly one full-height wave band is required."
+    ]
+  },
+  "pathContact": {
+    "applicable": true,
+    "model": "matched-revolution-nominal-centreline-separation",
+    "nominalStrandDiameterMm": 0.45,
+    "rotationDirection": "counter-clockwise",
+    "totalSampleIntervals": 22368,
+    "comparisons": [
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 1,
+        "revolutionFraction": 1,
+        "startPhaseRad": 0,
+        "endPhaseRad": 6.283185307179586,
+        "referenceStages": [
+          "transition"
+        ],
+        "minSeparationMm": 0.19999999999999996,
+        "maxSeparationMm": 0.30000000000000004,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 912,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 2,
+        "revolutionFraction": 1,
+        "startPhaseRad": 6.283185307179586,
+        "endPhaseRad": 12.566370614359172,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.2999999999999997,
+        "maxSeparationMm": 0.30000000000000027,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 768,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 3,
+        "revolutionFraction": 1,
+        "startPhaseRad": 12.566370614359172,
+        "endPhaseRad": 18.84955592153876,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.2999999999999994,
+        "maxSeparationMm": 0.30000000000000027,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 768,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 4,
+        "revolutionFraction": 1,
+        "startPhaseRad": 18.84955592153876,
+        "endPhaseRad": 25.132741228718345,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.2999999999999994,
+        "maxSeparationMm": 0.30000000000000027,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 768,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 5,
+        "revolutionFraction": 1,
+        "startPhaseRad": 25.132741228718345,
+        "endPhaseRad": 31.41592653589793,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.2999999999999994,
+        "maxSeparationMm": 0.3000000000000005,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 768,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 6,
+        "revolutionFraction": 1,
+        "startPhaseRad": 31.41592653589793,
+        "endPhaseRad": 37.69911184307752,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.2999999999999994,
+        "maxSeparationMm": 0.3000000000000007,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 768,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 7,
+        "revolutionFraction": 1,
+        "startPhaseRad": 37.69911184307752,
+        "endPhaseRad": 43.982297150257104,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.2999999999999994,
+        "maxSeparationMm": 0.3000000000000007,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 768,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 8,
+        "revolutionFraction": 1,
+        "startPhaseRad": 43.982297150257104,
+        "endPhaseRad": 50.26548245743669,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.2999999999999994,
+        "maxSeparationMm": 0.3000000000000007,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 768,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 9,
+        "revolutionFraction": 1,
+        "startPhaseRad": 50.26548245743669,
+        "endPhaseRad": 56.548667764616276,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.2999999999999994,
+        "maxSeparationMm": 0.3000000000000007,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 768,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 10,
+        "revolutionFraction": 1,
+        "startPhaseRad": 56.548667764616276,
+        "endPhaseRad": 62.83185307179586,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.2999999999999994,
+        "maxSeparationMm": 0.3000000000000007,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 768,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 11,
+        "revolutionFraction": 0.9999999999999989,
+        "startPhaseRad": 62.83185307179586,
+        "endPhaseRad": 69.11503837897544,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.2999999999999985,
+        "maxSeparationMm": 0.30000000000000115,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 768,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 12,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 69.11503837897544,
+        "endPhaseRad": 75.39822368615503,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999893,
+        "maxSeparationMm": 0.3000000000000016,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 768,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 13,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 75.39822368615503,
+        "endPhaseRad": 81.68140899333463,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999893,
+        "maxSeparationMm": 0.3000000000000016,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 768,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 14,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 81.68140899333463,
+        "endPhaseRad": 87.96459430051422,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999893,
+        "maxSeparationMm": 0.3000000000000016,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 768,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 15,
+        "revolutionFraction": 0.9999999999999989,
+        "startPhaseRad": 87.96459430051421,
+        "endPhaseRad": 94.24777960769379,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999893,
+        "maxSeparationMm": 0.32975254602476306,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 768,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 16,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 94.24777960769379,
+        "endPhaseRad": 100.53096491487338,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999893,
+        "maxSeparationMm": 0.3000000000000016,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 17,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 100.53096491487338,
+        "endPhaseRad": 106.81415022205297,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999805,
+        "maxSeparationMm": 0.3000000000000007,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 18,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 106.81415022205297,
+        "endPhaseRad": 113.09733552923257,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999805,
+        "maxSeparationMm": 0.3000000000000016,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 19,
+        "revolutionFraction": 0.9999999999999989,
+        "startPhaseRad": 113.09733552923255,
+        "endPhaseRad": 119.38052083641213,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999893,
+        "maxSeparationMm": 0.3000000000000016,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 20,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 119.38052083641213,
+        "endPhaseRad": 125.66370614359172,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999893,
+        "maxSeparationMm": 0.3000000000000016,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 21,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 125.66370614359172,
+        "endPhaseRad": 131.94689145077132,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999805,
+        "maxSeparationMm": 0.3000000000000016,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 22,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 131.94689145077132,
+        "endPhaseRad": 138.2300767579509,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999893,
+        "maxSeparationMm": 0.3000000000000016,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 23,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 138.23007675795088,
+        "endPhaseRad": 144.51326206513048,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999805,
+        "maxSeparationMm": 0.3000000000000025,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 24,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 144.51326206513048,
+        "endPhaseRad": 150.79644737231007,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999805,
+        "maxSeparationMm": 0.3000000000000025,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 25,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 150.79644737231007,
+        "endPhaseRad": 157.07963267948966,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999716,
+        "maxSeparationMm": 0.3000000000000016,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 26,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 157.07963267948966,
+        "endPhaseRad": 163.36281798666926,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999805,
+        "maxSeparationMm": 0.3000000000000025,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 27,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 163.36281798666926,
+        "endPhaseRad": 169.64600329384885,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999716,
+        "maxSeparationMm": 0.3000000000000025,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 28,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 169.64600329384882,
+        "endPhaseRad": 175.92918860102841,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999893,
+        "maxSeparationMm": 0.3000000000000025,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 29,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 175.92918860102841,
+        "endPhaseRad": 182.212373908208,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999716,
+        "maxSeparationMm": 0.3000000000000025,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 30,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 182.212373908208,
+        "endPhaseRad": 188.4955592153876,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999893,
+        "maxSeparationMm": 0.3000000000000025,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 31,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 188.49555921538757,
+        "endPhaseRad": 194.77874452256717,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999716,
+        "maxSeparationMm": 0.3000000000000025,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 32,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 194.77874452256717,
+        "endPhaseRad": 201.06192982974676,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999716,
+        "maxSeparationMm": 0.3000000000000025,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 33,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 201.06192982974676,
+        "endPhaseRad": 207.34511513692635,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999893,
+        "maxSeparationMm": 0.3000000000000025,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "wall",
+        "revolutionIndex": 34,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 207.34511513692635,
+        "endPhaseRad": 213.62830044410595,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.29999999999999893,
+        "maxSeparationMm": 0.3000000000000025,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 528,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      },
+      {
+        "currentStage": "rim",
+        "revolutionIndex": 1,
+        "revolutionFraction": 1.000000000000001,
+        "startPhaseRad": 213.62830044410595,
+        "endPhaseRad": 219.91148575128554,
+        "referenceStages": [
+          "wall"
+        ],
+        "minSeparationMm": 0.1999999999999993,
+        "maxSeparationMm": 0.32697675291530426,
+        "contactFractionEstimate": 1,
+        "sampleIntervals": 672,
+        "hasNominalContact": true,
+        "hasUnsupportedWindows": false
+      }
+    ],
+    "warnings": [
+      "Separation is measured between matched-angle points on emitted centreline segments in three dimensions.",
+      "Nominal contact means centreline separation <= nominal strand diameter; it does not predict bead shape, bonding, sag, cooling, or nozzle clearance.",
+      "1441 stationary anchor/deposit/dwell event(s), including 480 deposit event(s), were excluded from moving-strand separation; their positions were checked for path continuity."
+    ]
+  },
+  "printerDisplay": {
+    "thumbnails": [
+      "220x124/QOI",
+      "200x240/QOI"
+    ],
+    "progress": "M73 P/R, command-time estimate refreshed every 30 commanded seconds and after thermal/probe waits"
+  },
+  "outputStatus": "software-checked-experimental-job",
+  "physicalStatus": "unprinted; no nozzle-clearance or calibrated material simulation",
+  "previewModels": {
+    "wall": "circular volume-equivalent strand",
+    "foundation": "flattened volume-equivalent rectangle",
+    "transitionAndRim": "sloped flattened approximation",
+    "stationaryDeposit": "volume-equivalent sphere",
+    "physicalSolver": null
+  },
+  "durationScope": "Commanded motion, extrusion and dwell only; thermal waits, homing, probing, acceleration and firmware planning excluded.",
+  "observations": {
+    "printed": false,
+    "date": null,
+    "sheet": null,
+    "filamentColor": "unspecified",
+    "adhesion": null,
+    "measuredDiameterMm": null,
+    "measuredWallMm": null,
+    "sagMm": null,
+    "notes": ""
+  },
+  "gcodeSha256": "e2e51026b4a6c0211fab952da643b55a97a6d3d50fd83c355e7e2a90bdb5977d"
+}

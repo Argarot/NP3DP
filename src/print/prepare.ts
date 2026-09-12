@@ -19,8 +19,9 @@ import {
 } from './foundationInset';
 import type { FoundationSettings, PreparedBuild, PrintStage } from './types';
 import { inspectCircularWaveAttachment } from './attachment';
+import { inspectMatchedRevolutionPathContact } from './pathContact';
 
-export const PREPARED_BUILD_ENGINE_VERSION = '0.3.0';
+export const PREPARED_BUILD_ENGINE_VERSION = '0.4.0';
 const TWO_PI = 2 * Math.PI;
 const MAX_SEGMENT_MM = 0.6;
 const MIN_CONTOUR_SAMPLES = 32;
@@ -543,17 +544,19 @@ export function prepareBuild(recipe: Recipe, settings: FoundationSettings): Prep
     throw new RangeError(`Toolpath exceeded the ${MAX_TOOLPATH_EVENTS.toLocaleString('en-US')} event limit.`);
   }
 
+  const path: GeneratedToolpath = {
+    engineVersion: PREPARED_BUILD_ENGINE_VERSION,
+    recipeKey: body.recipeKey,
+    events,
+    stats: calculateStats(events, recipe.process.filamentDiameterMm),
+    diagnostics: preparedDiagnostics(body, settings),
+  };
   return {
     buildKey,
-    path: {
-      engineVersion: PREPARED_BUILD_ENGINE_VERSION,
-      recipeKey: body.recipeKey,
-      events,
-      stats: calculateStats(events, recipe.process.filamentDiameterMm),
-      diagnostics: preparedDiagnostics(body, settings),
-    },
+    path,
     wallOffsetZMm,
     stages,
     attachment: inspectCircularWaveAttachment(recipe, settings),
+    pathContact: inspectMatchedRevolutionPathContact({ path, stages }, recipe.process.strandDiameterMm),
   };
 }

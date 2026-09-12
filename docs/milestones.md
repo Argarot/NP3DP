@@ -1,6 +1,6 @@
 # Milestones and task gates
 
-**Implementation authorized on 11 September 2026.** The scope and staged roadmap are approved; numeric physical targets and hardware gates remain open. Current task evidence is recorded in [status](status.md) and [session 004](sessions/004-retry-feedback.md). Implemented generators do not imply a passed physical gate.
+**Implementation authorized on 11 September 2026.** The scope and staged roadmap are approved; numeric physical targets and hardware gates remain open. Current task evidence is recorded in [status](status.md) and [session 005](sessions/005-next-print-batch.md). Implemented generators do not imply a passed physical gate.
 
 Each gate has an artifact and observable evidence. The agreed alpha includes sinusoidal walls, triangles, arches, and an initial pause-and-move bridge sequence. Sagging/free-space loops, accurate filament simulation, integrated lamp hardware, and multi-printer compatibility are committed later capabilities. Detailed task estimates and numeric thresholds follow PRD approval and feasibility measurements.
 
@@ -26,7 +26,7 @@ flowchart LR
 
 ## M0 — Discovery and scope
 
-Session 003 implementation and session 004 feedback: T11 records actual firmware/stock hotend/filament grade with MINI variant unknown; T15/T25 include reviewed config import and first-layer compensation. T20–T23 include foundations, transition/rim, full MINI output, mandatory mesh/purge, LCD metadata/progress, command limits and independent parsing. T22 now has reported working preview/time display. T24 has **a reported successful original control, a failed original wave, and reported successful A/B retries**. Revised miniature and held-span studies have not been delivered. G1 needs agreed numerical targets and measured clearance; G2 still needs dimensional and repeatability evidence. M3/M4 physics and M6–M9 remain unfinished.
+Through session 005: T11 records firmware/stock hotend/filament grade with MINI variant unknown; T15/T25 include reviewed config import and first-layer compensation. T20–T23 include foundations, transition/rim, full MINI output, mandatory mesh/purge, LCD metadata/progress, command limits and independent parsing. T22 has reported working preview/time display. T24 has **a reported successful original control, a failed original wave, reported successful A/B retries and new unprinted 07–09 jobs**. T31/T41 add bounded emitted-chord XYZ separation and per-turn visualization. Phase-boundary and lifted-post issues are corrected or explicitly diagnosed. G1 needs agreed numerical targets and measured clearance; G2 still needs dimensional and repeatability evidence. M3/M4 physics and M6–M9 remain unfinished.
 
 | Task | Output | Gate evidence |
 |---|---|---|

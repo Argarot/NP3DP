@@ -108,7 +108,7 @@ describe('prepareBuild', () => {
     const expected = generateToolpath(recipe);
     const prepared = prepareBuild(recipe, settings);
     expect(prepared.path).toEqual(expected);
-    expect(prepared.path.engineVersion).toBe('0.1.0');
+    expect(prepared.path.engineVersion).toBe('0.2.0');
     expect(prepared.wallOffsetZMm).toBe(0);
     expect(prepared.stages).toEqual([{ kind: 'wall', startEvent: 0, endEvent: expected.events.length }]);
     expect(prepared.buildKey).toBe(JSON.stringify({ recipe, foundation: settings }));

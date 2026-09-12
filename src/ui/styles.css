@@ -202,6 +202,23 @@ input[type=range]::-moz-range-thumb { width: 9px; height: 9px; border-radius: 50
 .study-card h3, .import-review h3, .print-readiness h3 { font-size: .95rem; font-weight: 550; margin: 0 0 7px; }
 .study-card p, .setup-hint, .print-readiness p, .import-review p, .import-provenance p { font-size: .875rem; line-height: 1.55; color: #b0b9c3; margin: 0 0 12px; }
 .study-card .button { width: 100%; font-size: .875rem; }
+.prepared-downloads { margin-top: 10px; }
+.prepared-downloads .button { text-decoration: none; }
+.prepared-downloads p { margin: 9px 0; font-size: .8125rem; }
+.prepared-downloads > div { display: flex; gap: 18px; font-size: .875rem; }
+.test-batch-summary { padding: 14px; margin-bottom: 16px; border-left: 3px solid #93ad6b; background: #252f29; }
+.test-batch-summary strong { font-size: .9rem; color: #d6eabc; }
+.test-batch-summary p { font-size: .875rem; line-height: 1.5; color: #b0b9c3; margin: 8px 0 0; }
+.study-history { margin: 18px 0; }
+.study-history > summary { padding: 10px 0; cursor: pointer; font-size: .9rem; }
+.print-panel .panel-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.print-panel .panel-footer .text-button { font-size: .8125rem; text-align: left; }
+.print-panel .panel-footer > span { font-size: .75rem; color: #96a1ac; white-space: nowrap; }
+.contact-chart { display: block; width: 100%; height: auto; margin: 12px 0; }
+.contact-table { max-height: 220px; overflow: auto; }
+.contact-table table { border-collapse: collapse; width: 100%; font-size: .8125rem; }
+.contact-table th, .contact-table td { padding: 7px 3px; text-align: left; border-bottom: 1px solid #414b54; }
+.contact-table th { color: #b0b9c3; font-weight: 500; }
 .print-panel details { font-size: .875rem; margin-top: 13px; color: #b7c3cb; }
 .print-panel summary { cursor: pointer; }
 .print-panel ul { padding-left: 18px; line-height: 1.55; }

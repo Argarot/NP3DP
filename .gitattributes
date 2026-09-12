@@ -1,0 +1,2 @@
+# Machine-file hashes identify exact bytes on Windows and GitHub Pages.
+*.gcode -text

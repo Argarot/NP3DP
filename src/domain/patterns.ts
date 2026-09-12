@@ -162,25 +162,30 @@ function smoothSampleCount(context: PatternContext): number {
   return Math.max(1, byStepLength, byMotif, byChordError);
 }
 
-function phaseIntervalCount(range: BandRange, halfCycles: boolean): number {
+function interiorPhaseIndices(range: BandRange, halfCycles: boolean) {
   const phaseStep = halfCycles ? Math.PI : TWO_PI;
   const startPhase = rangePhaseAt(range, range.startTheta);
   const endPhase = rangePhaseAt(range, range.endTheta);
-  const firstInteriorIndex = Math.floor(startPhase / phaseStep) + 1;
-  const exclusiveEndIndex = Math.ceil(endPhase / phaseStep);
-  const interiorCount = Math.max(0, exclusiveEndIndex - firstInteriorIndex);
-  return interiorCount + 1;
+  // Accumulated phase can land a few ulps either side of an exact motif
+  // boundary. Such a boundary must not create a zero-motion deposit/hold.
+  // Preflight and emission use the same scale-aware numerical tolerance.
+  const tolerance = 8 * Number.EPSILON * Math.max(1, Math.abs(startPhase), Math.abs(endPhase));
+  return { phaseStep,
+    first: Math.floor((startPhase + tolerance) / phaseStep) + 1,
+    end: Math.ceil((endPhase - tolerance) / phaseStep),
+  };
+}
+
+function phaseIntervalCount(range: BandRange, halfCycles: boolean): number {
+  const { first, end } = interiorPhaseIndices(range, halfCycles);
+  return Math.max(0, end - first) + 1;
 }
 
 function phaseBreaks(range: BandRange, halfCycles: boolean): number[] {
   const slope = effectiveRepeats(range.band);
-  const phaseStep = halfCycles ? Math.PI : TWO_PI;
-  const startPhase = rangePhaseAt(range, range.startTheta);
-  const endPhase = rangePhaseAt(range, range.endTheta);
+  const { phaseStep, first, end } = interiorPhaseIndices(range, halfCycles);
   const values = [range.startTheta];
-  let index = Math.floor(startPhase / phaseStep) + 1;
-  const endIndex = Math.ceil(endPhase / phaseStep);
-  for (; index < endIndex; index += 1) {
+  for (let index = first; index < end; index += 1) {
     const theta = range.startTheta
       + (index * phaseStep - range.startPhaseRad) / slope;
     if (theta > range.startTheta && theta < range.endTheta) values.push(theta);

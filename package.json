@@ -1,6 +1,6 @@
 {
   "name": "np3dp",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "license": "UNLICENSED",
@@ -19,7 +19,8 @@
     "licenses:check": "node scripts/licenses.mjs --check",
     "examples": "node scripts/examples.mjs",
     "measure": "node scripts/measure.mjs",
-    "calibration": "node scripts/calibration.mjs"
+    "calibration": "node scripts/calibration.mjs",
+    "calibration:publish": "node scripts/calibration.mjs --publish"
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "5.3.0",

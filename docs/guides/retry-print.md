@@ -1,6 +1,6 @@
 # Attachment retry — A/B reference procedure
 
-**Follow-up, 12 September 2026:** the product manager reports A and B work well, and preview/time estimate work. [Recorded feedback](../evidence/session-004-observations.json). The sequence below remains the procedure for reproducing those references. A revised miniature and separate arch/held-span comparison are next build work; original 03/04 have not been reworked. Actual estimate accuracy and dimensional compensation remain unmeasured.
+**Follow-up, 12 September 2026:** the product manager reports A and B work well, and preview/time estimate work. [Recorded feedback](../evidence/session-004-observations.json). The sequence below remains the procedure for reproducing those references. The [new 07–09 batch](next-prints.md) is ready for physical testing; original 03/04 are preserved. Actual estimate accuracy and dimensional compensation remain unmeasured. Normal `npm run calibration` now generates the new batch; use `node scripts/calibration.mjs --batch retries` only when explicitly regenerating A/B.
 
 The product manager printed the original session-002 files unchanged: **01 control worked; 02 wave detached**. Later files were not printed at that point. The photo shows an intact base with loose coils; it does not provide measured temperatures, dimensions or an executed-motion trace.
 
@@ -8,7 +8,7 @@ The original wave had 0.60 mm rise per revolution and a nominal 0.45 mm strand. 
 
 ## New files
 
-Open [NP3DP](https://argarot.github.io/NP3DP/), then **Prepare print → Load retry A → Export print**. Alternatively, `npm run calibration` generates these files locally in `artifacts/session-003/`:
+Open [NP3DP](https://argarot.github.io/NP3DP/), then **Prepare print → Successful A/B references → Load retry A → Export print**. Alternatively, `node scripts/calibration.mjs --batch retries` generates these files locally in `artifacts/session-003/` using the current engine:
 
 | File | Rise/turn | Wave amplitude | Wall speed | Use |
 |---|---:|---:|---:|---|

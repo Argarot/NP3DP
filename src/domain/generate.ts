@@ -9,7 +9,7 @@ import {
 import { minimumNominalRadius, shapePoint } from './shapes';
 import { calculateStats } from './stats';
 
-export const ENGINE_VERSION = '0.1.0';
+export const ENGINE_VERSION = '0.2.0';
 const TWO_PI = 2 * Math.PI;
 
 export type GenerationPlacementSettings = PatternPlacementSettings;

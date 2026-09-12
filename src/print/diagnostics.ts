@@ -76,7 +76,13 @@ export function inspectPrintJob(recipe: Recipe, setup: PrintSetup, build: Prepar
     if (diagnostic.severity === 'error') add('error', diagnostic.code, diagnostic.message);
   }
   if (!build.path.events.some((event) => event.kind === 'extrude' && event.volumeMm3 > 0 && event.role !== 'foundation' && event.role !== 'transition')) add('error', 'job.no-wall-extrusion', 'The wall has no positive moving extrusion. Review flow before exporting a complete job.');
-  add('warning', 'physical.untested', 'This newly generated job has not been physically tested. One original control succeeded; the original wave failed attachment. Start the retry sequence with A.');
+  add('warning', 'physical.untested', 'This newly generated job has no recorded physical result. The original control and A/B retries were reported successful; changed shapes or deposition methods require their own print observations.');
+  if (recipe.bands.some((band) => band.kind === 'bridge' && (band.amplitudeMm !== 0 || band.radialAmplitudeMm !== 0))) {
+    add('warning', 'bridge.retraced-post', 'The lifted bridge method extrudes down to an anchor and back up its post before the next span. Both passes add material. Use the zero-lift held-span comparison to isolate stationary anchoring and dwell; lifted posts need separate physical testing.');
+  }
+  if (recipe.bands.some((band) => band.kind === 'bridge' && band.amplitudeMm >= recipe.process.pitchMm && Math.abs(band.phaseAdvanceDeg % 360) < 1e-9 && Number.isInteger(band.repeatsPerTurn))) {
+    add('warning', 'bridge.post-overlap', 'With aligned bridge anchors and lift at least as large as rise per turn, a later anchor can lie on or inside a previously deposited post. This is a geometric interaction in the original held-span study. Reduce lift or redesign the anchor sequence before using that experiment.');
+  }
   if (build.attachment?.applicable && build.attachment.sampledGeometry.turns.some((turn) => turn.contactFractionEstimate === 0)) add('warning', 'attachment.missing', 'The circular-wave estimate finds a turn with no sampled matched-angle Z gap within the requested strand diameter. This matches a geometric problem in the failed original coupon; review rise per turn and attachment geometry.');
   add('warning', 'clearance.unknown', 'Bed and commanded-speed checks do not prove nozzle/fan-duct clearance or attachment to previous strands. Non-planar contact remains unmodelled.');
   add('info', 'motion.commanded', 'Speed, flow and duration are command-based estimates. Acceleration, pressure history, cooling, probe motion and thermal waits are not simulated.');

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import type { ParameterSpec } from '../domain/recipe';
-import { CALIBRATION_STUDIES, RETRY_STUDIES } from '../print/calibration';
+import { TestBench, TEST_BENCH_STUDIES } from './TestBench';
+import { studyFoundation } from '../print/calibration';
 import { importPrusaConfig } from '../print/importProfile';
 import type { ProfileImportResult } from '../print/importProfile';
 import { serializeProject } from '../print/project';
@@ -10,8 +11,8 @@ import { downloadText, safeFilename } from './files';
 import { ParameterField } from './ParameterField';
 import { Icon } from './Icons';
 import type { WaveAttachmentReport } from '../print/attachment';
-
-const TEST_BENCH_STUDIES = [...RETRY_STUDIES, ...CALIBRATION_STUDIES];
+import type { MatchedRevolutionPathContactReport } from '../print/pathContact';
+import { PathContactPanel } from './PathContactPanel';
 
 const FOUNDATION_FIELDS = {
   layers: { label: 'Foundation layers', min: 1, max: 8, step: 1, unit: 'layers' },
@@ -44,9 +45,10 @@ interface Props {
   pending: boolean;
   generationError: string | null;
   attachment?: WaveAttachmentReport;
+  pathContact?: MatchedRevolutionPathContactReport;
 }
 
-export function PrintPanel({ project, onChange, diagnostics, metrics, pending, generationError, attachment }: Props) {
+export function PrintPanel({ project, onChange, diagnostics, metrics, pending, generationError, attachment, pathContact }: Props) {
   const { setup, recipe } = project;
   const [tab, setTab] = useState<'setup' | 'foundation' | 'tests'>('tests');
   const [error, setError] = useState<string | null>(null);
@@ -71,7 +73,7 @@ export function PrintPanel({ project, onChange, diagnostics, metrics, pending, g
     const study = TEST_BENCH_STUDIES.find((entry) => entry.id === id)!;
     onChange({ ...project,
       recipe: { ...study.recipe, process: { ...study.recipe.process, filamentDiameterMm: recipe.process.filamentDiameterMm, flowMultiplier: recipe.process.flowMultiplier } },
-      setup: { ...setup, foundation: { ...setup.foundation, enabled: true, layers: 3, layerHeightMm: 0.2, lineWidthMm: 0.45, speedMmS: 20, blendHeightMm: 4, rimTurns: 1 } },
+      setup: { ...setup, foundation: studyFoundation(study, setup.foundation) },
     });
   };
   const blocked = diagnostics.filter((entry) => entry.severity === 'error');
@@ -80,17 +82,7 @@ export function PrintPanel({ project, onChange, diagnostics, metrics, pending, g
       {([['tests', 'Test bench'], ['setup', 'Printer'], ['foundation', 'Foundation']] as const).map(([value, label]) => <button role="tab" key={value} aria-selected={tab === value} aria-controls={`print-${value}`} onClick={() => setTab(value)}>{label}</button>)}
     </div>
     <div className="panel-scroll" role="tabpanel" id={`print-${tab}`}>
-      {tab === 'tests' && <>
-        <div className="panel-intro"><span className="micro-label">PRINT FEEDBACK → RETRY</span><h2>Make the turns attach.</h2><p>The original control worked in one reported print. The original wave detached. Retry A reduces the rise per turn before testing wider openings with B.</p><a href="https://github.com/Argarot/NP3DP/blob/main/docs/guides/retry-print.md" target="_blank" rel="noreferrer">Retry guide and observation checklist ↗</a></div>
-        {TEST_BENCH_STUDIES.map((study) => <article className={`study-card ${recipe.name === study.recipe.name ? 'selected' : ''}`} key={study.id}>
-          <h3>{study.title}</h3><p>{study.description}</p>
-          {study.id === 'wave' && <p className="field-error">Original specimen failed attachment. Retained for inspection; use retry A for the next print.</p>}
-          {['miniature', 'held-spans'].includes(study.id) && <p className="setup-hint">Defer this physical test until retry attachment works.</p>}
-          <button className="button secondary-button" onClick={() => loadStudy(study.id)}>Load {study.loadLabel ?? (study.id === 'control' ? 'control cup' : study.id === 'miniature' ? 'mini vase' : study.id === 'wave' ? 'wave coupon' : 'span coupon')}<Icon name="chevron" size={14} /></button>
-          {recipe.name === study.recipe.name && <details><summary>What to record</summary><ul>{study.observe.map((item) => <li key={item}>{item}</li>)}</ul></details>}
-        </article>)}
-        <div className="quiet-note"><Icon name="info" /><p>Loading a test sets its shape, deposition and foundation. It retains your printer, material, filament diameter and flow multiplier.</p></div>
-      </>}
+      {tab === 'tests' && <TestBench recipeName={recipe.name} loadStudy={loadStudy} />}
       {tab === 'setup' && <>
         <div className="panel-intro"><span className="micro-label">MACHINE + MATERIAL</span><h2>Prusa MINI family</h2><p>One reviewed command adapter. Every physical recipe is still an experiment.</p></div>
         <label className="control-label" htmlFor="printer-variant">Printer variant</label><select id="printer-variant" value={setup.printer.variant} onChange={(event) => editPrinter('variant', event.target.value)}><option value="unknown">MINI / MINI+ — uncertain</option><option value="mini">Original MINI</option><option value="mini-plus">MINI+</option></select>
@@ -133,6 +125,7 @@ export function PrintPanel({ project, onChange, diagnostics, metrics, pending, g
         <p>Physical printability and printhead clearance remain unverified.</p>
         <p>Complete exports include mesh leveling (G29), a front purge, MINI LCD thumbnails and timed progress updates. Remaining time excludes heating, probing and firmware dynamics.</p>
       </div>
+      {!pending && !generationError && pathContact && <PathContactPanel report={pathContact} />}
       {!pending && !generationError && attachment?.applicable && <div className="print-readiness" aria-label="Nominal attachment estimate">
         <span className="micro-label">SAMPLED GEOMETRY · CIRCULAR WAVE</span><h3>Do the turns meet?</h3>
         <p>Matched-angle Z gap compared with the requested {attachment.strandDiameterMm.toFixed(2)} mm strand. This estimates geometry, not bonding or nozzle clearance.</p>
