@@ -118,6 +118,7 @@ export async function importPrusaConfig(text: string, filename: string, current:
         break;
       case 'max_fan_speed': mapNumber(draft, 'material.fanPercent', value, key, changes, mapped, importedTargets); break;
       case 'layer_height': mapNumber(draft, 'foundation.layerHeightMm', value, key, changes, mapped, importedTargets); break;
+      case 'elefant_foot_compensation': mapNumber(draft, 'foundation.elephantFootMm', value, key, changes, mapped, importedTargets); break;
       case 'extrusion_width': {
         const number = parseScalarNumber(value, key);
         if (number === 0) {
@@ -313,7 +314,7 @@ function applyConservativeXyLimit(draft: PrintSetup, number: number, key: string
   report(mapped, key, 'mapped settings');
 }
 
-type SetupNumberField = 'printer.nozzleDiameterMm' | 'printer.maxXySpeedMmS' | 'printer.maxZSpeedMmS' | 'printer.accelerationMmS2' | 'material.nozzleC' | 'material.firstLayerNozzleC' | 'material.bedC' | 'material.firstLayerBedC' | 'material.maxFlowMm3S' | 'material.fanPercent' | 'foundation.layerHeightMm' | 'foundation.lineWidthMm';
+type SetupNumberField = 'printer.nozzleDiameterMm' | 'printer.maxXySpeedMmS' | 'printer.maxZSpeedMmS' | 'printer.accelerationMmS2' | 'material.nozzleC' | 'material.firstLayerNozzleC' | 'material.bedC' | 'material.firstLayerBedC' | 'material.maxFlowMm3S' | 'material.fanPercent' | 'foundation.layerHeightMm' | 'foundation.lineWidthMm' | 'foundation.elephantFootMm';
 type SetupStringField = 'printer.variant' | 'provenance.filamentProfile' | 'provenance.printerProfile' | 'provenance.slicerVersion';
 type ImportedTarget = SetupNumberField | 'process.filamentDiameterMm' | 'process.flowMultiplier';
 

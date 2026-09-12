@@ -14,7 +14,9 @@ self.onmessage = async (event: MessageEvent<{ kind?: 'draft'; recipe: Recipe; pa
         const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(result.text));
         report = JSON.stringify({ ...JSON.parse(report), gcodeSha256: [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('') }, null, 2);
       }
-      self.postMessage({ ...result, report, preview: result.text?.split('\n', 100).join('\n') });
+      // Keep the review focused on startup instead of hundreds of encoded rows.
+      const readable = result.text?.replace(/^; thumbnail_QOI begin[^\n]*\n(?:; [A-Za-z0-9+/=]+\n)*; thumbnail_QOI end/gm, '; [MINI thumbnail embedded]');
+      self.postMessage({ ...result, report, preview: readable?.split('\n', 100).join('\n') });
       return;
     }
     const { recipe, path } = event.data;

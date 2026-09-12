@@ -1,8 +1,10 @@
 # First supervised print on the Prusa MINI family
 
+**Updated after the first prints:** the original control succeeded in one reported print; the original wave failed attachment. Use the [session-003 retry guide](retry-print.md) and retry A next. The original sequence below is historical setup context; do not resume the old wave file. The calibration command now generates session-003 retries while preserving original files.
+
 This guide covers NP3DP's first physical experiments on a stock-hotend Prusa MINI or MINI+ with a 0.4 mm nozzle, Buddy firmware `5.1.2+13478`, and eSUN PLA Basic. The exact MINI-family variant is still unknown. Leave it as **MINI / MINI+ — uncertain** in the app until the printer label or purchase record resolves it; the reviewed 5.1.2 command adapter is shared by both variants.
 
-The files pass software checks for the narrow command dialect, coordinates, modes, temperature waits, extrusion totals, flow ceiling and shutdown sequence. No NP3DP object has yet been shown to adhere, avoid printhead contact, or form the previewed strands on this printer. Read the [adapter and manufacturer research](../research/mini-5.1.2-adapter.md) and [toolpath limits](../research/toolpath-feasibility.md) before treating the output as more than a supervised experiment.
+The files pass software checks for the narrow command dialect, coordinates, modes, temperature waits, extrusion totals, flow ceiling and shutdown sequence. At session-002 delivery no physical evidence was available. The reported control success and wave failure are now recorded in the retry guide; clearance and dimensional accuracy remain unmeasured. Read the [adapter and manufacturer research](../research/mini-5.1.2-adapter.md) and [toolpath limits](../research/toolpath-feasibility.md) before treating the output as more than a supervised experiment.
 
 ## Prepare the known setup
 

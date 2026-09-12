@@ -1,4 +1,5 @@
 import type { GeneratedToolpath, Recipe } from '../domain/types';
+import type { WaveAttachmentReport } from './attachment';
 
 /** Print setup is deliberately separate from schema-1 wall recipe semantics. */
 export interface FoundationSettings {
@@ -10,6 +11,8 @@ export interface FoundationSettings {
   /** Height over which experimental offsets are introduced above the foundation. */
   blendHeightMm: number;
   rimTurns: number;
+  /** Inward first-layer contour offset. Zero preserves the legacy footprint. */
+  elephantFootMm: number;
 }
 
 export interface PrinterSettings {
@@ -50,7 +53,7 @@ export interface ProfileProvenance {
 }
 
 export interface PrintSetup {
-  schemaVersion: 1;
+  schemaVersion: 2;
   printer: PrinterSettings;
   material: MaterialSettings;
   foundation: FoundationSettings;
@@ -59,7 +62,7 @@ export interface PrintSetup {
 
 export interface PrintProject {
   format: 'np3dp-project';
-  schemaVersion: 1;
+  schemaVersion: 2;
   recipe: Recipe;
   setup: PrintSetup;
 }
@@ -72,6 +75,7 @@ export interface PreparedBuild {
   path: GeneratedToolpath;
   wallOffsetZMm: number;
   stages: PrintStage[];
+  attachment?: WaveAttachmentReport;
 }
 
 export interface JobDiagnostic {

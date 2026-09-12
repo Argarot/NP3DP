@@ -1,8 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { generateToolpath } from '../domain/generate';
 import { distance } from '../domain/math';
+import { shapePoint } from '../domain/shapes';
 import type { Band, Recipe, ToolpathEvent, Vec3 } from '../domain/types';
 import { exportDraft } from '../export/draft';
+import {
+  interpolateClosedOutline,
+  interpolateClosedOutlineAtPhases,
+  inwardOffsetConvexPolygon,
+} from './foundationInset';
 import { prepareBuild, PREPARED_BUILD_ENGINE_VERSION } from './prepare';
 import type { FoundationSettings, PrintStage } from './types';
 
@@ -49,7 +55,9 @@ function testRecipe(overrides: Partial<Recipe> = {}): Recipe {
   };
 }
 
-function foundationSettings(overrides: Partial<FoundationSettings> = {}): FoundationSettings {
+type TestFoundationSettings = FoundationSettings & { elephantFootMm: number };
+
+function foundationSettings(overrides: Partial<TestFoundationSettings> = {}): TestFoundationSettings {
   return {
     enabled: true,
     layers: 3,
@@ -58,6 +66,7 @@ function foundationSettings(overrides: Partial<FoundationSettings> = {}): Founda
     speedMmS: 20,
     blendHeightMm: 4,
     rimTurns: 1,
+    elephantFootMm: 0,
     ...overrides,
   };
 }
@@ -78,6 +87,18 @@ function expectSamePoint(actual: Vec3, expected: Vec3): void {
 
 function eventsForStage(result: ReturnType<typeof prepareBuild>, stage: PrintStage): ToolpathEvent[] {
   return result.path.events.slice(stage.startEvent, stage.endEvent);
+}
+
+function xyRadius(point: Vec3): number {
+  return Math.hypot(point.x, point.y);
+}
+
+function pointIsInsideConvexOutline(point: Vec3, outline: ReadonlyArray<{ x: number; y: number }>): boolean {
+  return outline.every((start, index) => {
+    const end = outline[(index + 1) % outline.length];
+    if (end === undefined) throw new Error('Incomplete outline.');
+    return (end.x - start.x) * (point.y - start.y) - (end.y - start.y) * (point.x - start.x) >= -1e-9;
+  });
 }
 
 describe('prepareBuild', () => {
@@ -241,6 +262,162 @@ describe('prepareBuild', () => {
       expect(outerEnd.y).toBeCloseTo(0, 10);
     },
   );
+
+  it('reduces a circular first-layer diameter by exactly twice the requested inset', () => {
+    const recipe = testRecipe({
+      shape: { ...testRecipe().shape, baseDiameterMm: 10, topDiameterMm: 10, bellyMm: 0, twistDeg: 0 },
+      bands: [testBand({ amplitudeMm: 0, radialAmplitudeMm: 0 })],
+    });
+    const insetMm = 0.15;
+    const prepared = prepareBuild(recipe, foundationSettings({ layers: 2, rimTurns: 0, elephantFootMm: insetMm }));
+    const foundation = prepared.stages.find((stage) => stage.kind === 'foundation');
+    if (foundation === undefined) throw new Error('Missing foundation stage.');
+    const extrusions = eventsForStage(prepared, foundation).filter((event) => event.kind === 'extrude');
+    const firstLayerRadius = Math.max(...extrusions
+      .flatMap((event) => [event.from, event.to])
+      .filter((point) => point.z === 0.2)
+      .map(xyRadius));
+    const secondLayerRadius = Math.max(...extrusions
+      .flatMap((event) => [event.from, event.to])
+      .filter((point) => point.z === 0.4)
+      .map(xyRadius));
+    expect(firstLayerRadius * 2).toBeCloseTo(recipe.shape.baseDiameterMm - 2 * insetMm, 12);
+    expect(secondLayerRadius * 2).toBeCloseTo(recipe.shape.baseDiameterMm, 12);
+  });
+
+  it('uses a validated perpendicular sampled-outline inset for first-layer ellipse rings', () => {
+      const section = 'ellipse';
+      const recipe = testRecipe({
+        shape: { ...testRecipe().shape, section, aspectRatio: 1.6, bellyMm: 0, twistDeg: 0 },
+        bands: [testBand({ amplitudeMm: 0, radialAmplitudeMm: 0 })],
+      });
+      const prepared = prepareBuild(recipe, foundationSettings({ layers: 1, rimTurns: 0, elephantFootMm: 0.15 }));
+      const foundation = prepared.stages.find((stage) => stage.kind === 'foundation');
+      if (foundation === undefined) throw new Error('Missing foundation stage.');
+      const firstLayerExtrusions = eventsForStage(prepared, foundation)
+        .filter((event) => event.kind === 'extrude');
+      const unitRadius = section === 'ellipse'
+        ? Math.max(1, 1 / recipe.shape.aspectRatio)
+        : (1 + 1 / recipe.shape.aspectRatio ** 4) ** 0.25;
+      const samples = Math.max(32, Math.ceil(2 * Math.PI * recipe.shape.baseDiameterMm / 2 * unitRadius / 0.6));
+      const nominalOutline = Array.from({ length: samples }, (_, sample) => {
+        const point = shapePoint(recipe.shape, 2 * Math.PI * sample / samples, 0);
+        return { x: point.x, y: point.y };
+      });
+      const compensatedOutline = inwardOffsetConvexPolygon(nominalOutline, 0.15);
+      expect(firstLayerExtrusions.flatMap((event) => [event.from, event.to])
+        .every((point) => pointIsInsideConvexOutline(point, compensatedOutline))).toBe(true);
+      expect(prepared.path.diagnostics.some((entry) =>
+        entry.code === 'geometry.foundation-elephant-foot-inset')).toBe(true);
+  });
+
+  it.each([0.25, 1, 1.6, 4])(
+    'bounds squircle foundation, transition, and partial-turn twisted rim moves at aspect %s',
+    (aspectRatio) => {
+      const recipe = testRecipe({
+        shape: {
+          ...testRecipe().shape,
+          heightMm: 3.7,
+          baseDiameterMm: 10,
+          topDiameterMm: 10,
+          bellyMm: 0,
+          section: 'squircle',
+          aspectRatio,
+          twistDeg: 17,
+        },
+        process: { ...testRecipe().process, pitchMm: 0.3 },
+        bands: [testBand({ amplitudeMm: 0, radialAmplitudeMm: 0 })],
+      });
+      const prepared = prepareBuild(recipe, foundationSettings({
+        layers: 1, lineWidthMm: 0.45, rimTurns: 1, elephantFootMm: 0.15,
+      }));
+      const bounded = prepared.path.events.filter((event): event is Extract<ToolpathEvent, { kind: 'extrude' }> => event.kind === 'extrude'
+        && (event.role === 'foundation' || event.role === 'transition' || event.role === 'rim'));
+      expect(bounded.length).toBeGreaterThan(0);
+      const longest = bounded.reduce((maximum, event) =>
+        distance(event.from, event.to) > distance(maximum.from, maximum.to) ? event : maximum);
+      expect(distance(longest.from, longest.to)).toBeLessThanOrEqual(0.601);
+      let current = eventStart(prepared.path.events[0] as ToolpathEvent);
+      let continuous = true;
+      for (const event of prepared.path.events) {
+        const start = eventStart(event);
+        continuous = continuous && distance(start, current) <= 1e-9;
+        current = eventEnd(event);
+      }
+      expect(continuous).toBe(true);
+      expect(prepared.path.events.length).toBeLessThan(100_000);
+    },
+  );
+
+  it('keeps compensated first-layer joins continuous and uses travel for nominal upper-layer placement', () => {
+    for (const layers of [1, 2, 3]) {
+      const prepared = prepareBuild(testRecipe(), foundationSettings({ layers, rimTurns: 0, elephantFootMm: 0.15 }));
+      let current = eventStart(prepared.path.events[0] as ToolpathEvent);
+      for (const event of prepared.path.events) {
+        expectSamePoint(eventStart(event), current);
+        current = eventEnd(event);
+      }
+      const travels = prepared.path.events.filter((event) => event.kind === 'travel');
+      const xyTravels = travels.filter((event) =>
+        Math.hypot(event.to.x - event.from.x, event.to.y - event.from.y) > 0);
+      expect(xyTravels).toHaveLength(layers % 2 === 1 ? 1 : 0);
+    }
+  });
+
+  it('starts inward first layers on the compensated outline without a bed-height radial travel', () => {
+    const prepared = prepareBuild(testRecipe(), foundationSettings({ layers: 2, rimTurns: 0, elephantFootMm: 0.15 }));
+    const first = prepared.path.events[0];
+    expect(first?.kind).toBe('extrude');
+    if (first?.kind !== 'extrude') throw new Error('Missing first-layer extrusion.');
+    expect(xyRadius(first.from)).toBeCloseTo(testRecipe().shape.baseDiameterMm / 2 - 0.15, 12);
+    expect(prepared.path.events.some((event) => event.kind === 'travel'
+      && event.from.z === 0.2 && event.to.z === 0.2
+      && Math.hypot(event.to.x - event.from.x, event.to.y - event.from.y) > 0)).toBe(false);
+  });
+
+  it('uses a non-extruding nominal-start connector before a one-layer transition', () => {
+    const prepared = prepareBuild(testRecipe(), foundationSettings({ layers: 1, rimTurns: 0, elephantFootMm: 0.15 }));
+    const transition = prepared.stages.find((stage) => stage.kind === 'transition');
+    if (transition === undefined) throw new Error('Missing transition stage.');
+    const connector = prepared.path.events[transition.startEvent];
+    const firstTransitionExtrusion = prepared.path.events[transition.startEvent + 1];
+    expect(connector?.kind).toBe('travel');
+    expect(firstTransitionExtrusion?.kind).toBe('extrude');
+    if (connector?.kind !== 'travel' || firstTransitionExtrusion?.kind !== 'extrude') {
+      throw new Error('Missing transition connector.');
+    }
+    expect(connector.to.z).toBeCloseTo(0.2, 12);
+    expect(Math.hypot(connector.to.x - connector.from.x, connector.to.y - connector.from.y)).toBeGreaterThan(0);
+    expectSamePoint(firstTransitionExtrusion.from, connector.to);
+  });
+
+  it('rejects an out-of-range or geometrically collapsed elephant-foot inset', () => {
+    expect(() => prepareBuild(testRecipe(), foundationSettings({ elephantFootMm: -0.01 }))).toThrow(/between 0 and 0\.5/i);
+    expect(() => prepareBuild(testRecipe(), foundationSettings({ elephantFootMm: 0.51 }))).toThrow(/between 0 and 0\.5/i);
+    expect(() => prepareBuild(testRecipe(), foundationSettings({ elephantFootMm: Number.NaN }))).toThrow(/finite/i);
+    const narrowEllipse = testRecipe({
+      shape: { ...testRecipe().shape, baseDiameterMm: 0.5, topDiameterMm: 0.5, bellyMm: 0, section: 'ellipse', aspectRatio: 1 },
+      bands: [testBand({ amplitudeMm: 0, radialAmplitudeMm: 0 })],
+    });
+    expect(() => prepareBuild(narrowEllipse, foundationSettings({
+      layers: 1, lineWidthMm: 0.45, blendHeightMm: 0, rimTurns: 0, elephantFootMm: 0.4,
+    }))).toThrow(/inset|convex|degenerate/i);
+  });
+
+  it('constructs a perpendicular convex-polygon offset rather than radial scaling', () => {
+    const rectangle = [
+      { x: 3, y: 1 }, { x: -3, y: 1 }, { x: -3, y: -1 }, { x: 3, y: -1 },
+    ];
+    const inset = inwardOffsetConvexPolygon(rectangle, 0.2);
+    expect(inset).toEqual([
+      { x: 2.8, y: 0.8 }, { x: -2.8, y: 0.8 }, { x: -2.8, y: -0.8 }, { x: 2.8, y: -0.8 },
+    ]);
+    expect(interpolateClosedOutline(inset, 1)).toEqual(inset[0]);
+    expect(interpolateClosedOutlineAtPhases(inset, [0, 0.1, 0.6, 0.8, 1], 0.35))
+      .toMatchObject({ x: -2.8 });
+    expect(interpolateClosedOutlineAtPhases(inset, [0, 0.1, 0.6, 0.8, 1], 0.35).y)
+      .toBeCloseTo(0, 12);
+  });
 
   it('assigns foundation/rim roles and the requested first/last band metadata', () => {
     const recipe = testRecipe({

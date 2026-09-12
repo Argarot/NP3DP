@@ -87,3 +87,20 @@ All choices below use D18 and are revisable. None is a physically validated pres
 | E22 | Final text is independently interpreted and SHA-256 linked to its report. Version small projects; generate larger machine files locally. | Reproducible recipe/setup/audit evidence without committing generated megabyte files. Algorithm provenance is recorded; future engine versions are not promised byte-identical replay. |
 
 Next decisions require actual print observations, agreed predictive-error targets, selected lamp fitting dimensions and a second printer when its milestone starts. No new service, license or guaranteed-success claim was introduced.
+
+## Logged engineering defaults — session 003
+
+The product manager requested attachment fixes, LCD preview/progress, elephant-foot compensation and a purge after printing original files unchanged. These defaults use D18; the later roadmap remains intact.
+
+| ID | Default taken | Reason and practical limit |
+|---|---|---|
+| E23 | Preserve original studies; add explicit A/B retries at 0.30/0.40 mm pitch, 0.08/0.12 mm amplitude and 6 mm/s. Retain 100% wall fan and existing temperatures. | Original wave's startup had a whole turn without nominal support. Reduce baseline separation before adding larger unsupported windows. A/B remain physically untested. No arbitrary deep plunge or centreline crossing was added. |
+| E24 | Project/setup schema 2 adds 0–0.5 mm first-layer inset; new setups 0.15 mm, v1 migration 0 mm. | Preserve old experiment intent. Inset all first-layer rings; higher layers remain nominal. Circle offset is exact; other supported convex outlines use sampled perpendicular offset. Prusa's [compensation guidance](https://help.prusa3d.com/article/elephant-foot-compensation_114487) motivates an editable inset; 0.15 mm is a proposed calibration default. |
+| E25 | Restricted circular-wave nominal contact estimator, capped at 512 turns / approximately 250k intervals. | Exposes the startup failure in the UI/report. Same-angle gap versus nominal diameter is an estimate of geometry, not a physical solver. General shapes/material contact remain unfinished. |
+| E26 | MINI LCD QOI pair 220×124 and 200×240, deterministic worker rasterizer, bounded prefix. Final-text M73 P/R every ~30 commanded seconds and after waits; positive minutes round up. | Pinned firmware requires QOI for these screens. ETA excludes thermal/probing/firmware dynamics. Initial duration also appears in header/footer metadata. Network/Connect PNG previews are separate from this LCD fix. |
+| E27 | Two moving purge segments X5→65→135 at Y6/Z0.2, E8+E10; feeds capped to 90% selected flow and selected XY ceiling. | Official MINI intro-line behavior uses these lengths/amounts; adapt numeric behavior inside our bed reservation without copying its profile or macro. Independently require the full purge sequence and post-purge clearance. No stationary blob prime. G29 remains mandatory. |
+| E28 | Keep original observation hashes/manifests and generate retries into session-003 paths. Bound unit-test workers to two, allow 30 s CPU fixtures, reuse immutable baseline audit fixtures. | Separate historical evidence from new outputs. Initial 5 s fixture timeouts were test-runner failures under load, not passing performance evidence. No geometry/export assertions were relaxed; performance is measured separately. |
+
+Control 01 is one reported success; wave 02 is one reported failure. Neither constitutes repeatability, measured clearance or calibrated prediction. The unknown MINI/MINI+ variant and existing physical-accuracy/hardware decisions remain open.
+
+E24 refinement: squircle contours now use adaptive phase tables shared by emission and preflight, including shifted rim seams after partial wall turns. The prior uniform-angle estimate produced multi-millimetre segments near squircle axes. Non-circular prepared geometry therefore changes with engine 0.3; historical exact machine files remain the replay record. Circle retry G-code bytes were verified unchanged by this refinement.

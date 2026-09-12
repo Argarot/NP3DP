@@ -2,7 +2,7 @@
 
 A browser workbench for experimental non-planar 3D printing. Design a vessel, combine deposition methods, and inspect commanded motion and nominal material geometry.
 
-**Engineering preview 0.2.** Design experiments and export complete, independently audited jobs for the recorded MINI setup. Physical printing is untested; calibrated filament simulation remains under development. [Open the workbench](https://argarot.github.io/NP3DP/) · [First-print guide](docs/guides/first-print.md) · [Current status](docs/status.md)
+**Engineering preview 0.3.** Design experiments and export complete, independently audited jobs for the recorded MINI setup. One original control succeeded; the original wave failed attachment. New retries are untested; calibrated filament simulation remains under development. [Open the workbench](https://argarot.github.io/NP3DP/) · [Retry-print guide](docs/guides/retry-print.md) · [Current status](docs/status.md)
 
 ## What works
 
@@ -17,8 +17,9 @@ A browser workbench for experimental non-planar 3D printing. Design a vessel, co
 - Printer/material setup and reviewed import of a supported subset of flat PrusaSlicer configuration files.
 - Planar foundations, rising transitions, rim turns and full-job startup/finish for MINI firmware 5.1.2.
 - Four [calibration projects](examples/calibration/), project/setup round trips, and G-code-linked reports with SHA-256 checksums.
+- Two [attachment retries](examples/retries/), nominal per-turn contact estimates, first-layer compensation, MINI LCD thumbnails, progress/ETA and a two-part purge.
 
-**Prepare print → Load control cup → Export print** is the first physical-test workflow. Review the settings and follow the [printing guide](docs/guides/first-print.md). The independent command audit verifies the emitted dialect, state, temperatures, motion, extrusion and finish; it does not establish adhesion or printhead clearance. The strand model displays commanded material volume, without sag, cooling, contact or printer dynamics. Wall-only **Motion draft** remains an inspection file with no machine setup.
+**Prepare print → Load retry A → Export print** is the next physical-test workflow. Review the settings and follow the [retry guide](docs/guides/retry-print.md). The independent command audit verifies the emitted dialect, state, temperatures, motion, extrusion and finish; it does not establish adhesion or printhead clearance. The strand model displays commanded material volume, without sag, cooling, contact or printer dynamics. Wall-only **Motion draft** remains an inspection file with no machine setup.
 
 ## Run locally
 
@@ -41,11 +42,11 @@ npm run licenses:check
 
 Pushes to main run verification and deploy the static build to GitHub Pages. Pull requests run the same software checks without deployment. No backend, account or printer connection is required.
 
-`npm run calibration` regenerates the four versioned calibration projects, locally ignored G-code/reports in `artifacts/session-002/`, and a measurement/checksum manifest in `docs/evidence/`. It uses the same compiler as the app and fails if any study fails its command audit. Generated machine files are deliberately not committed; keep the project and report with each actual run.
+`npm run calibration` generates the two versioned retry projects in `examples/retries/`, locally ignored G-code/reports in `artifacts/session-003/`, and a measurement/checksum manifest in `docs/evidence/`. Original session-002 projects and outputs are preserved. It uses the same compiler as the app and fails if any study fails its command audit. Generated machine files are deliberately not committed; keep the project and report with each actual run.
 
 ## Product direction
 
-The first physical reference is a woven-looking decorative vase with visible gaps on a Prusa MINI-family printer, stock hotend, 0.4 mm nozzle, firmware `5.1.2+13478`, and white/black eSUN PLA Basic. MINI versus MINI+ remains uncertain. Test a control cup, then the wave coupon, before the miniature vase.
+The first physical reference is a woven-looking decorative vase with visible gaps on a Prusa MINI-family printer, stock hotend, 0.4 mm nozzle, firmware `5.1.2+13478`, and white/black eSUN PLA Basic. MINI versus MINI+ remains uncertain. The original control worked and the wave detached. Test retry A, then B, before advancing to the miniature vase.
 
 Sagging/free-space loops, accurately calibrated filament simulation, integrated lamp brackets/socket interfaces, and multi-printer compatibility are **required later milestones**. Creative freedom takes priority over guaranteed print success; command correctness and claims about physical accuracy are separate gates.
 
@@ -58,6 +59,7 @@ Sagging/free-space loops, accurately calibrated filament simulation, integrated 
 - [Implementation architecture and path mathematics](docs/architecture.md)
 - [Session 001 record](docs/sessions/001-workbench.md)
 - [Session 002 record and next-session plan](docs/sessions/002-printer-workflow.md)
+- [Session 003 attachment retry and next-session plan](docs/sessions/003-attachment-retry.md)
 - [First print and observation log](docs/guides/first-print.md), [profile import](docs/guides/profile-import.md)
 - [Research and discovery](docs/discovery.md)
 - [Existing projects](docs/research/project-inventory.md), [toolpath feasibility](docs/research/toolpath-feasibility.md), [profile reuse](docs/research/profile-reuse.md), [filament simulation](docs/research/filament-simulation.md)

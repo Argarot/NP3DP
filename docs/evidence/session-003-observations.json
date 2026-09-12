@@ -1,0 +1,45 @@
+{
+  "recordedAt": "2026-09-12",
+  "evidenceKind": "product-manager report and attached photograph",
+  "fileIdentity": "Operator states original calibration files were used unchanged; hashes identify the delivered files, not a printer-readback measurement.",
+  "printer": {
+    "family": "Prusa MINI",
+    "variant": "unknown MINI vs MINI+",
+    "firmware": "5.1.2+13478",
+    "hotend": "stock",
+    "nozzleDiameterMm": 0.4,
+    "material": "eSUN PLA Basic",
+    "color": "not explicitly confirmed for this run",
+    "sheet": null
+  },
+  "observations": [
+    {
+      "id": "control",
+      "filename": "01-control-cup.gcode",
+      "deliveredGcodeSha256": "6f32874805a0b12822e56ee2141a60f02fb82ba4b4e0b2ba7cb8a5199eb122ab",
+      "reportedResult": "works great",
+      "measurements": null
+    },
+    {
+      "id": "wave",
+      "filename": "02-wave-coupon.gcode",
+      "deliveredGcodeSha256": "fdc5bf3873f8650ba466ae6ce8c9ecdb408fb7a0c3a5f1cfb358c072c7e31f1a",
+      "reportedResult": "failed: loops did not attach; loose coils; stopped",
+      "measurements": null
+    }
+  ],
+  "laterStudies": "not printed",
+  "feedback": [
+    "no LCD thumbnail",
+    "no progress/remaining-time estimate",
+    "no elephant-foot compensation",
+    "purge line requested"
+  ],
+  "interpretation": "Original file commands fan100 and E6 purge; actual execution of those features is unobserved. The original wave has a whole startup turn without nominal matched-angle support. This does not establish a unique physical failure cause.",
+  "photograph": {
+    "sha256": "0e5b0513ab7940f54878183472f078315deb53568aa304874d5cc5c06357201f",
+    "localCopy": "artifacts/session-003/original-wave-failure.png",
+    "published": false,
+    "scale": "uncalibrated"
+  }
+}

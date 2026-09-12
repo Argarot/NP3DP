@@ -47,7 +47,7 @@ describe('print setup contract', () => {
 
   it.each([
     ['unknown field', (value: Record<string, unknown>) => { value.future = true; }, /unexpected field/],
-    ['unknown schema', (value: Record<string, unknown>) => { value.schemaVersion = 2; }, /unsupported schemaVersion/],
+    ['unknown schema', (value: Record<string, unknown>) => { value.schemaVersion = 99; }, /unsupported schemaVersion/],
     ['non-finite number', (value: Record<string, unknown>) => { ((value.material as Record<string, unknown>).nozzleC) = Number.NaN; }, /finite number/],
     ['unreviewed imported target', (value: Record<string, unknown>) => { ((value.provenance as Record<string, unknown>).importedValues) = { 'future.target': '1' }; }, /unsupported target/],
   ])('rejects $0 without silently changing it', (_label, mutate, message) => {
@@ -161,7 +161,7 @@ describe('PrusaSlicer flattened config import', () => {
 
 describe('project envelope', () => {
   it('round-trips recipe and setup while the recipe format remains unchanged', () => {
-    const project = { format: 'np3dp-project' as const, schemaVersion: 1 as const, recipe: DEFAULT_RECIPE, setup: DEFAULT_PRINT_SETUP };
+    const project = { format: 'np3dp-project' as const, schemaVersion: 2 as const, recipe: DEFAULT_RECIPE, setup: DEFAULT_PRINT_SETUP };
     const serialized = serializeProject(project);
     expect(parseProjectText(serialized)).toEqual(project);
     expect(serializeRecipe(parseProjectText(serialized).recipe)).toBe(serializeRecipe(DEFAULT_RECIPE));
@@ -169,8 +169,28 @@ describe('project envelope', () => {
   });
 
   it('rejects a future project envelope without accepting unknown persisted semantics', () => {
-    const future = JSON.parse(serializeProject({ format: 'np3dp-project', schemaVersion: 1, recipe: DEFAULT_RECIPE, setup: DEFAULT_PRINT_SETUP })) as Record<string, unknown>;
-    future.schemaVersion = 2;
+    const future = JSON.parse(serializeProject({ format: 'np3dp-project', schemaVersion: 2, recipe: DEFAULT_RECIPE, setup: DEFAULT_PRINT_SETUP })) as Record<string, unknown>;
+    future.schemaVersion = 99;
     expect(() => parseProjectText(JSON.stringify(future))).toThrow(/unsupported schemaVersion/);
+  });
+
+  it('migrates version 1 with zero compensation, preserving its original footprint', () => {
+    const legacy = setupCopy();
+    legacy.schemaVersion = 1;
+    delete (legacy.foundation as Record<string, unknown>).elephantFootMm;
+    const migrated = parseProjectText(JSON.stringify({ format: 'np3dp-project', schemaVersion: 1, recipe: DEFAULT_RECIPE, setup: legacy }));
+    expect(migrated.schemaVersion).toBe(2);
+    expect(migrated.setup.schemaVersion).toBe(2);
+    expect(migrated.setup.foundation.elephantFootMm).toBe(0);
+    expect(migrated.recipe).toEqual(DEFAULT_RECIPE);
+    expect(parseProjectText(serializeProject(migrated))).toEqual(migrated);
+    expect(() => parseProjectText(JSON.stringify({ ...migrated, schemaVersion: 1 }))).toThrow(/schema versions must match/);
+  });
+
+  it('imports explicit compensation with provenance and rejects an out-of-range inset', async () => {
+    const imported = await importPrusaConfig('elefant_foot_compensation = 0.2', 'foot.ini', DEFAULT_PRINT_SETUP);
+    expect(imported.setup.foundation.elephantFootMm).toBe(0.2);
+    expect(imported.setup.provenance.importedValues['foundation.elephantFootMm']).toBe('0.2');
+    await expect(importPrusaConfig('elefant_foot_compensation = 0.51', 'foot.ini', DEFAULT_PRINT_SETUP)).rejects.toThrow(/0 to 0.5/);
   });
 });

@@ -1,6 +1,6 @@
 # Milestones and task gates
 
-**Implementation authorized on 11 September 2026.** The scope and staged roadmap are approved; numeric physical targets and hardware gates remain open. Current task evidence is recorded in [status](status.md) and [session 002](sessions/002-printer-workflow.md). Implemented generators do not imply a passed physical gate.
+**Implementation authorized on 11 September 2026.** The scope and staged roadmap are approved; numeric physical targets and hardware gates remain open. Current task evidence is recorded in [status](status.md) and [session 003](sessions/003-attachment-retry.md). Implemented generators do not imply a passed physical gate.
 
 Each gate has an artifact and observable evidence. The agreed alpha includes sinusoidal walls, triangles, arches, and an initial pause-and-move bridge sequence. Sagging/free-space loops, accurate filament simulation, integrated lamp hardware, and multi-printer compatibility are committed later capabilities. Detailed task estimates and numeric thresholds follow PRD approval and feasibility measurements.
 
@@ -26,7 +26,7 @@ flowchart LR
 
 ## M0 — Discovery and scope
 
-Session 002 software progress: T11 records the actual firmware/stock hotend/filament grade with MINI variant unknown; T15/T25 have a bounded, reviewed config importer; T20–T23 have foundations, transition/rim, full MINI output, command limits and an independent parser. T24 has generated calibration candidates and an observation guide, **no physical result**. G1 still needs agreed numerical targets and measured clearance; G2 requires the control print. M3/M4 physics and M6–M9 remain unfinished.
+Session 003 progress: T11 records actual firmware/stock hotend/filament grade with MINI variant unknown; T15/T25 include reviewed config import and first-layer compensation. T20–T23 include foundations, transition/rim, full MINI output, mandatory mesh/purge, LCD metadata/progress, command limits and independent parsing. T24 now has **one reported successful original control and a failed original wave**, with explicit A/B attachment retries. G1 needs agreed numerical targets and measured clearance; G2 still needs dimensional and repeatability evidence. M3/M4 physics and M6–M9 remain unfinished.
 
 | Task | Output | Gate evidence |
 |---|---|---|

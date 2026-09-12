@@ -76,7 +76,8 @@ export function inspectPrintJob(recipe: Recipe, setup: PrintSetup, build: Prepar
     if (diagnostic.severity === 'error') add('error', diagnostic.code, diagnostic.message);
   }
   if (!build.path.events.some((event) => event.kind === 'extrude' && event.volumeMm3 > 0 && event.role !== 'foundation' && event.role !== 'transition')) add('error', 'job.no-wall-extrusion', 'The wall has no positive moving extrusion. Review flow before exporting a complete job.');
-  add('warning', 'physical.untested', 'No NP3DP recipe has been physically validated yet. Start with the control cup and observe the print.');
+  add('warning', 'physical.untested', 'This newly generated job has not been physically tested. One original control succeeded; the original wave failed attachment. Start the retry sequence with A.');
+  if (build.attachment?.applicable && build.attachment.sampledGeometry.turns.some((turn) => turn.contactFractionEstimate === 0)) add('warning', 'attachment.missing', 'The circular-wave estimate finds a turn with no sampled matched-angle Z gap within the requested strand diameter. This matches a geometric problem in the failed original coupon; review rise per turn and attachment geometry.');
   add('warning', 'clearance.unknown', 'Bed and commanded-speed checks do not prove nozzle/fan-duct clearance or attachment to previous strands. Non-planar contact remains unmodelled.');
   add('info', 'motion.commanded', 'Speed, flow and duration are command-based estimates. Acceleration, pressure history, cooling, probe motion and thermal waits are not simulated.');
   return { diagnostics, metrics };

@@ -9,6 +9,9 @@ import type { CommandMetrics } from './diagnostics';
 import { auditMiniGcode } from './auditMini';
 import type { MiniAudit } from './auditMini';
 import type { JobDiagnostic, PreparedBuild, PrintSetup } from './types';
+import { renderPrintThumbnail } from './thumbnail';
+import { frameMiniThumbnailPrefix, qoiThumbnail } from './miniMetadata';
+import { addMiniProgress } from './miniProgress';
 
 export interface PrintJobResult {
   text: string | null;
@@ -42,9 +45,11 @@ export function compilePrintJob(recipeInput: Recipe, setupInput: PrintSetup): Pr
   }
   const report = JSON.stringify({
     format: 'np3dp-print-report', schemaVersion: 1, engineVersion: build.path.engineVersion,
-    adapterVersion: 'mini-5.1.2/1', project: { format: 'np3dp-project', schemaVersion: 1, recipe, setup },
+    adapterVersion: 'mini-5.1.2/2', project: { format: 'np3dp-project', schemaVersion: 2, recipe, setup },
     buildKey: build.buildKey, wallOffsetZMm: build.wallOffsetZMm, stages: build.stages,
     commandMetrics: inspected.metrics, toolpathStats: build.path.stats, diagnostics, audit,
+    attachment: build.attachment,
+    printerDisplay: { thumbnails: ['220x124/QOI', '200x240/QOI'], progress: 'M73 P/R, command-time estimate refreshed every 30 commanded seconds and after thermal/probe waits' },
     outputStatus: text ? 'software-checked-experimental-job' : 'blocked',
     physicalStatus: 'unprinted; no nozzle-clearance or calibrated material simulation',
     previewModels: { wall: 'circular volume-equivalent strand', foundation: 'flattened volume-equivalent rectangle', transitionAndRim: 'sloped flattened approximation', stationaryDeposit: 'volume-equivalent sphere', physicalSolver: null },
@@ -61,11 +66,14 @@ function serializeMiniJob(recipe: Recipe, setup: PrintSetup, build: PreparedBuil
   const last = lastEvent.kind === 'extrude' || lastEvent.kind === 'travel' ? lastEvent.to : lastEvent.at;
   const { material, printer, foundation } = setup;
   const adapterTravelFeed = number(Math.min(50, printer.maxXySpeedMmS) * 60);
-  const purgeSpeed = Math.min(10, material.maxFlowMm3S * 0.8 * 60 / (6 * Math.PI * (1.75 / 2) ** 2));
+  const purgeFeed = (lengthMm: number, extrusionMm: number, requestedFeed: number) => {
+    const bounded = Math.min(requestedFeed, printer.maxXySpeedMmS * 60, 0.9 * material.maxFlowMm3S * 60 * lengthMm / (extrusionMm * Math.PI * (1.75 / 2) ** 2));
+    return (Math.floor(bounded * 1000) / 1000).toFixed(3);
+  };
   const commands = [
     '; NP3DP — experimental MINI-family job',
     `; Recipe: ${comment(recipe.name)}`,
-    `; Engine: ${build.path.engineVersion}; adapter: mini-5.1.2/1`,
+    `; Engine: ${build.path.engineVersion}; adapter: mini-5.1.2/2`,
     `; Target firmware: ${comment(printer.firmware)}; variant: ${printer.variant}; nozzle: 0.4 mm`,
     `; Material: ${comment(material.name)}; colour: ${material.color}`,
     '; Software-checked commands. Physical printability and printhead clearance are unvalidated.',
@@ -80,7 +88,9 @@ function serializeMiniJob(recipe: Recipe, setup: PrintSetup, build: PreparedBuil
     'M109 R170', 'G28', 'G29',
     'G0 Z2.000 F120.000', `G0 X5.000 Y6.000 F${adapterTravelFeed}`,
     `M109 R${number(material.firstLayerNozzleC)}`, 'G92 E0',
-    'G0 Z0.200 F120.000', `G1 X65.000 Y6.000 E6.00000 F${number(purgeSpeed * 60)}`,
+    '; PURGE: two moving intro segments at Y6; second segment must be continuous',
+    'G0 Z0.200 F120.000', `G1 X65.000 Y6.000 E8.00000 F${purgeFeed(60, 8, 840)}`,
+    `G1 X135.000 Y6.000 E10.00000 F${purgeFeed(70, 10, 700)}`, 'G92 E0',
     'G0 Z2.000 F120.000',
     `G0 X${number(first.x + 90)} Y${number(first.y + 90)} F${number(Math.min(recipe.process.travelMmS, printer.maxXySpeedMmS) * 60)}`,
     'G92 E0', '; NP3DP_PHASE body',
@@ -105,7 +115,8 @@ function serializeMiniJob(recipe: Recipe, setup: PrintSetup, build: PreparedBuil
     `G0 Z${number(liftZ)} F120.000`, `G0 X10.000 Y170.000 F${adapterTravelFeed}`,
     'M400', 'M104 S0', 'M140 S0', 'M107', 'M572 S0', 'M221 S100', 'M84',
     '; END NP3DP EXPERIMENT');
-  return `${commands.join('\n')}\n`;
+  const thumbnails = frameMiniThumbnailPrefix([[220, 124], [200, 240]].map(([width, height]) => qoiThumbnail(renderPrintThumbnail(build.path, foundation, width!, height!))));
+  return addMiniProgress(`${thumbnails}${commands.join('\n')}\n`).text;
 }
 
 function number(value: number): string { if (!Number.isFinite(value)) throw new Error('Non-finite machine parameter.'); return value.toFixed(3); }

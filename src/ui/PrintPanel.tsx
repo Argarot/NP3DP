@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import type { ParameterSpec } from '../domain/recipe';
-import { CALIBRATION_STUDIES } from '../print/calibration';
+import { CALIBRATION_STUDIES, RETRY_STUDIES } from '../print/calibration';
 import { importPrusaConfig } from '../print/importProfile';
 import type { ProfileImportResult } from '../print/importProfile';
 import { serializeProject } from '../print/project';
@@ -9,6 +9,9 @@ import type { CommandMetrics } from '../print/diagnostics';
 import { downloadText, safeFilename } from './files';
 import { ParameterField } from './ParameterField';
 import { Icon } from './Icons';
+import type { WaveAttachmentReport } from '../print/attachment';
+
+const TEST_BENCH_STUDIES = [...RETRY_STUDIES, ...CALIBRATION_STUDIES];
 
 const FOUNDATION_FIELDS = {
   layers: { label: 'Foundation layers', min: 1, max: 8, step: 1, unit: 'layers' },
@@ -17,6 +20,7 @@ const FOUNDATION_FIELDS = {
   speedMmS: { label: 'Foundation speed', min: 5, max: 60, step: 1, unit: 'mm/s' },
   blendHeightMm: { label: 'Pattern lead-in height', min: 0, max: 30, step: 0.1, unit: 'mm' },
   rimTurns: { label: 'Finish rim turns', min: 0, max: 3, step: 1, unit: 'turns' },
+  elephantFootMm: { label: 'Elephant foot compensation', min: 0, max: 0.5, step: 0.01, unit: 'mm' },
 } as const satisfies Record<Exclude<keyof FoundationSettings, 'enabled'>, ParameterSpec>;
 const MATERIAL_FIELDS = {
   firstLayerNozzleC: { label: 'First-layer nozzle', min: 180, max: 240, step: 1, unit: '°C' },
@@ -39,9 +43,10 @@ interface Props {
   metrics: CommandMetrics | null;
   pending: boolean;
   generationError: string | null;
+  attachment?: WaveAttachmentReport;
 }
 
-export function PrintPanel({ project, onChange, diagnostics, metrics, pending, generationError }: Props) {
+export function PrintPanel({ project, onChange, diagnostics, metrics, pending, generationError, attachment }: Props) {
   const { setup, recipe } = project;
   const [tab, setTab] = useState<'setup' | 'foundation' | 'tests'>('tests');
   const [error, setError] = useState<string | null>(null);
@@ -63,7 +68,7 @@ export function PrintPanel({ project, onChange, diagnostics, metrics, pending, g
     finally { setBusy(false); }
   };
   const loadStudy = (id: string) => {
-    const study = CALIBRATION_STUDIES.find((entry) => entry.id === id)!;
+    const study = TEST_BENCH_STUDIES.find((entry) => entry.id === id)!;
     onChange({ ...project,
       recipe: { ...study.recipe, process: { ...study.recipe.process, filamentDiameterMm: recipe.process.filamentDiameterMm, flowMultiplier: recipe.process.flowMultiplier } },
       setup: { ...setup, foundation: { ...setup.foundation, enabled: true, layers: 3, layerHeightMm: 0.2, lineWidthMm: 0.45, speedMmS: 20, blendHeightMm: 4, rimTurns: 1 } },
@@ -76,10 +81,12 @@ export function PrintPanel({ project, onChange, diagnostics, metrics, pending, g
     </div>
     <div className="panel-scroll" role="tabpanel" id={`print-${tab}`}>
       {tab === 'tests' && <>
-        <div className="panel-intro"><span className="micro-label">FIRST PHYSICAL EXPERIMENTS</span><h2>Start small. Learn from it.</h2><p>Check a control cup before adding unsupported motion. These studies are ready to inspect, with no print success claimed.</p></div>
-        {CALIBRATION_STUDIES.map((study) => <article className={`study-card ${recipe.name === study.recipe.name ? 'selected' : ''}`} key={study.id}>
+        <div className="panel-intro"><span className="micro-label">PRINT FEEDBACK → RETRY</span><h2>Make the turns attach.</h2><p>The original control worked in one reported print. The original wave detached. Retry A reduces the rise per turn before testing wider openings with B.</p><a href="https://github.com/Argarot/NP3DP/blob/main/docs/guides/retry-print.md" target="_blank" rel="noreferrer">Retry guide and observation checklist ↗</a></div>
+        {TEST_BENCH_STUDIES.map((study) => <article className={`study-card ${recipe.name === study.recipe.name ? 'selected' : ''}`} key={study.id}>
           <h3>{study.title}</h3><p>{study.description}</p>
-          <button className="button secondary-button" onClick={() => loadStudy(study.id)}>Load {study.id === 'control' ? 'control cup' : study.id === 'miniature' ? 'mini vase' : study.id === 'wave' ? 'wave coupon' : 'span coupon'}<Icon name="chevron" size={14} /></button>
+          {study.id === 'wave' && <p className="field-error">Original specimen failed attachment. Retained for inspection; use retry A for the next print.</p>}
+          {['miniature', 'held-spans'].includes(study.id) && <p className="setup-hint">Defer this physical test until retry attachment works.</p>}
+          <button className="button secondary-button" onClick={() => loadStudy(study.id)}>Load {study.loadLabel ?? (study.id === 'control' ? 'control cup' : study.id === 'miniature' ? 'mini vase' : study.id === 'wave' ? 'wave coupon' : 'span coupon')}<Icon name="chevron" size={14} /></button>
           {recipe.name === study.recipe.name && <details><summary>What to record</summary><ul>{study.observe.map((item) => <li key={item}>{item}</li>)}</ul></details>}
         </article>)}
         <div className="quiet-note"><Icon name="info" /><p>Loading a test sets its shape, deposition and foundation. It retains your printer, material, filament diameter and flow multiplier.</p></div>
@@ -116,6 +123,7 @@ export function PrintPanel({ project, onChange, diagnostics, metrics, pending, g
         <div className="build-sequence"><span>Foundation</span><b>→</b><span>Lead-in</span><b>→</b><span>Wall</span><b>→</b><span>Rim</span></div>
         {(Object.keys(FOUNDATION_FIELDS) as (keyof typeof FOUNDATION_FIELDS)[]).map((field) => <ParameterField key={field} value={setup.foundation[field]} spec={FOUNDATION_FIELDS[field]} onChange={(value) => editFoundation(field, value)} />)}
         <div className="quiet-note"><Icon name="info" /><p>Lead-in height gradually introduces Z and radial effects. It must accommodate downward excursions; requested amplitudes are preserved above it.</p></div>
+        <p className="setup-hint">Elephant foot compensation insets every first-layer ring; upper layers keep their size. New setups start at 0.15 mm. Imported version-1 projects retain 0 mm until you change it.</p>
       </>}
       <div className={`print-readiness ${blocked.length ? 'blocked' : ''}`} aria-label="Job readiness">
         <span className="micro-label">COMMAND CHECKS</span><h3>{generationError ? 'Print plan needs adjustment' : pending ? 'Updating the print plan…' : !setup.foundation.enabled ? 'Wall study mode' : blocked.length ? `${blocked.length} issue${blocked.length === 1 ? '' : 's'} to resolve` : 'Ready for export review'}</h3>
@@ -123,7 +131,16 @@ export function PrintPanel({ project, onChange, diagnostics, metrics, pending, g
         {!pending && blocked.map((entry) => <p className="field-error" key={entry.code}>{entry.message}</p>)}
         {!pending && metrics && <dl><div><dt>Peak Z command</dt><dd>{metrics.maximumZSpeedMmS.toFixed(2)} mm/s</dd></div><div><dt>Peak flow command</dt><dd>{metrics.maximumFlowMm3S.toFixed(2)} mm³/s</dd></div></dl>}
         <p>Physical printability and printhead clearance remain unverified.</p>
+        <p>Complete exports include mesh leveling (G29), a front purge, MINI LCD thumbnails and timed progress updates. Remaining time excludes heating, probing and firmware dynamics.</p>
       </div>
+      {!pending && !generationError && attachment?.applicable && <div className="print-readiness" aria-label="Nominal attachment estimate">
+        <span className="micro-label">SAMPLED GEOMETRY · CIRCULAR WAVE</span><h3>Do the turns meet?</h3>
+        <p>Matched-angle Z gap compared with the requested {attachment.strandDiameterMm.toFixed(2)} mm strand. This estimates geometry, not bonding or nozzle clearance.</p>
+        <dl>{attachment.sampledGeometry.turns.slice(0, 3).map((turn) => <div key={turn.turnIndex}><dt>Turn {turn.turnIndex} nominal contact</dt><dd>{Math.round(turn.contactFractionEstimate * 100)}%</dd></div>)}
+          <div><dt>Ideal full-amplitude gap</dt><dd>{attachment.fullBlendClosedForm.minGapMm.toFixed(2)}–{attachment.fullBlendClosedForm.maxGapMm.toFixed(2)} mm</dd></div></dl>
+        <p className="setup-hint">The ideal range assumes both turns reach full amplitude. Short walls and long lead-ins may never reach it.</p>
+        {attachment.warnings.map((warning) => <p key={warning}>{warning}</p>)}
+      </div>}
     </div>
     <div className="panel-footer"><button className="text-button" onClick={() => downloadText(serializeProject(project), `${safeFilename(recipe.name)}.np3dp-project.json`, 'application/json')}>Save project + print setup</button><span>Local files</span></div>
   </section>;

@@ -12,11 +12,15 @@ function setup(overrides?: (value: PrintSetup) => void): PrintSetup {
   return value;
 }
 
+const compiledFixtures = new Map<string, string>();
 function compiled(value = setup()): { text: string; setup: PrintSetup } {
+  const key = JSON.stringify(value), cached = compiledFixtures.get(key);
+  if (cached) return { text: cached, setup: value };
   const recipe = CALIBRATION_STUDIES[0]!.recipe;
   const result = compilePrintJob(recipe, value);
   expect(result.diagnostics.filter((entry) => entry.severity === 'error')).toEqual([]);
   expect(result.text).not.toBeNull();
+  compiledFixtures.set(key, result.text!);
   return { text: result.text!, setup: value };
 }
 

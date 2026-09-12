@@ -1,10 +1,10 @@
 import type { JobDiagnostic, PrintSetup } from './types';
 
-export const PRINT_SETUP_SCHEMA_VERSION = 1;
+export const PRINT_SETUP_SCHEMA_VERSION = 2;
 
 /** Explicit proposals for the first MINI-family adapter. They are not printer-test evidence. */
 export const DEFAULT_PRINT_SETUP: PrintSetup = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   printer: {
     adapter: 'prusa-mini-buddy-5.1.2',
     variant: 'unknown',
@@ -33,6 +33,7 @@ export const DEFAULT_PRINT_SETUP: PrintSetup = {
     speedMmS: 20,
     blendHeightMm: 4,
     rimTurns: 1,
+    elephantFootMm: 0.15,
   },
   provenance: {
     source: 'manual',
@@ -51,7 +52,8 @@ export const DEFAULT_PRINT_SETUP: PrintSetup = {
 const SETUP_KEYS = ['schemaVersion', 'printer', 'material', 'foundation', 'provenance'] as const;
 const PRINTER_KEYS = ['adapter', 'variant', 'firmware', 'hotend', 'nozzleDiameterMm', 'maxXySpeedMmS', 'maxZSpeedMmS', 'accelerationMmS2'] as const;
 const MATERIAL_KEYS = ['name', 'color', 'nozzleC', 'bedC', 'firstLayerNozzleC', 'firstLayerBedC', 'maxFlowMm3S', 'fanPercent'] as const;
-const FOUNDATION_KEYS = ['enabled', 'layers', 'layerHeightMm', 'lineWidthMm', 'speedMmS', 'blendHeightMm', 'rimTurns'] as const;
+const FOUNDATION_V1_KEYS = ['enabled', 'layers', 'layerHeightMm', 'lineWidthMm', 'speedMmS', 'blendHeightMm', 'rimTurns'] as const;
+const FOUNDATION_KEYS = [...FOUNDATION_V1_KEYS, 'elephantFootMm'] as const;
 const PROVENANCE_KEYS = ['source', 'filename', 'digest', 'slicerVersion', 'printerProfile', 'filamentProfile', 'importedValues', 'mappedFields', 'ignoredFields', 'warnings'] as const;
 const CONTROL = /[\u0000-\u001f\u007f]/;
 const NUMBER_PATTERN = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/;
@@ -65,8 +67,8 @@ const MAX_PROVENANCE_ITEMS = 1_000;
 export function parsePrintSetup(input: unknown): PrintSetup {
   const setup = expectRecord(input, 'print setup');
   expectExactKeys(setup, SETUP_KEYS, 'print setup');
-  if (setup.schemaVersion !== PRINT_SETUP_SCHEMA_VERSION) {
-    throw new Error(`Invalid print setup: unsupported schemaVersion ${describe(setup.schemaVersion)}; only version 1 is supported.`);
+  if (setup.schemaVersion !== 1 && setup.schemaVersion !== PRINT_SETUP_SCHEMA_VERSION) {
+    throw new Error(`Invalid print setup: unsupported schemaVersion ${describe(setup.schemaVersion)}; versions 1 and 2 are supported.`);
   }
 
   const printer = expectRecord(setup.printer, 'print setup.printer');
@@ -74,12 +76,12 @@ export function parsePrintSetup(input: unknown): PrintSetup {
   const material = expectRecord(setup.material, 'print setup.material');
   expectExactKeys(material, MATERIAL_KEYS, 'print setup.material');
   const foundation = expectRecord(setup.foundation, 'print setup.foundation');
-  expectExactKeys(foundation, FOUNDATION_KEYS, 'print setup.foundation');
+  expectExactKeys(foundation, setup.schemaVersion === 1 ? FOUNDATION_V1_KEYS : FOUNDATION_KEYS, 'print setup.foundation');
   const provenance = expectRecord(setup.provenance, 'print setup.provenance');
   expectExactKeys(provenance, PROVENANCE_KEYS, 'print setup.provenance');
 
   const parsed: PrintSetup = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     printer: {
       adapter: expectEnum(printer.adapter, ['prusa-mini-buddy-5.1.2'], 'print setup.printer.adapter') as PrintSetup['printer']['adapter'],
       variant: expectEnum(printer.variant, ['mini', 'mini-plus', 'unknown'], 'print setup.printer.variant') as PrintSetup['printer']['variant'],
@@ -108,6 +110,8 @@ export function parsePrintSetup(input: unknown): PrintSetup {
       speedMmS: expectNumber(foundation.speedMmS, 'print setup.foundation.speedMmS', 5, 60),
       blendHeightMm: expectNumber(foundation.blendHeightMm, 'print setup.foundation.blendHeightMm', 0, 30),
       rimTurns: expectNumber(foundation.rimTurns, 'print setup.foundation.rimTurns', 0, 3, true),
+      // Loading an older file must not silently shrink its successful base.
+      elephantFootMm: setup.schemaVersion === 1 ? 0 : expectNumber(foundation.elephantFootMm, 'print setup.foundation.elephantFootMm', 0, 0.5),
     },
     provenance: {
       source: expectEnum(provenance.source, ['manual', 'prusaslicer-config'], 'print setup.provenance.source') as PrintSetup['provenance']['source'],
@@ -189,7 +193,7 @@ function expectTextArray(value: unknown, path: string): string[] {
 const IMPORTED_VALUE_KEYS = new Set([
   'printer.nozzleDiameterMm', 'printer.maxXySpeedMmS', 'printer.maxZSpeedMmS', 'printer.accelerationMmS2',
   'material.nozzleC', 'material.firstLayerNozzleC', 'material.bedC', 'material.firstLayerBedC', 'material.maxFlowMm3S', 'material.fanPercent',
-  'foundation.layerHeightMm', 'foundation.lineWidthMm', 'process.filamentDiameterMm', 'process.flowMultiplier',
+  'foundation.layerHeightMm', 'foundation.lineWidthMm', 'foundation.elephantFootMm', 'process.filamentDiameterMm', 'process.flowMultiplier',
 ]);
 
 function expectImportedValues(value: unknown): Record<string, string> {

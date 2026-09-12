@@ -1,8 +1,14 @@
 # Implementation architecture
 
-Session 002, app/prepared engine 0.2.0, legacy wall engine 0.1.0, recipe schema 1, project/setup schema 1. This describes the actual code. [Research alternatives](research/architecture-options.md) retain the reasoning behind it; [status](status.md) records unfinished work.
+Session 003, app/prepared engine 0.3.0, legacy wall engine 0.1.0, recipe schema 1, project/setup schema 2. This describes the actual code. [Research alternatives](research/architecture-options.md) retain the reasoning behind it; [status](status.md) records unfinished work.
 
 ## Boundaries
+
+Session 003 adds `attachment.ts` beside the pure prepared-build planner. Its bounded circular-wave analysis runs with generation, so stale jobs are cancelled with their geometry. Reports/UI label it nominal matched-angle gap analysis; it is not a general contact solver. The ideal full-amplitude range can differ from a finite wall's envelope-limited range.
+
+The first-layer planner insets the outer contour and scales every inner ring within it; upper layers stay nominal. Compensated joins are explicit non-extruding events. Setup/project v1 imports produce v2 with zero inset; new v2 setups propose 0.15 mm. `elefant_foot_compensation` imports through the same reviewed/provenanced numeric mapping as other supported settings.
+
+Full export adds a deterministic CPU raster of deposited events, an independently implemented QOI encoder, final-text M73 annotation, and a separate structural LCD metadata audit. The adapter preserves G29 and checks an ordered two-segment purge. The progress annotator and final audit independently time quantized motion/stationary extrusion/dwell; thermal waits and dynamics remain absent. QOI prefix, pixel work, text/line and event budgets bound worker work. Encoded image comments are omitted only from the human-readable startup excerpt, never the downloaded program.
 
 ```mermaid
 flowchart LR
@@ -82,7 +88,7 @@ Changes debounce for 120 ms. Obsolete workers are terminated; request IDs also r
 
 Recipes and projects are local JSON files, limited to 1 MB. Unknown versions/fields, non-finite values, invalid shapes and duplicate band IDs fail explicitly. Imported data never executes code. Undo keeps 80 complete project snapshots; no automatic browser save exists. Save before closing or refreshing. Legacy recipe import retains current setup; project import replaces both atomically. Profile proposals cannot apply after the source project changes. Optional WebMCP recipe tools call the same validator and editor actions, preserving setup without additional storage or service.
 
-Schema 1 preserves editable recipe semantics; byte-identical toolpath replay across future engine releases is not yet guaranteed. Reports record the actual engine version; complete-job reports also record adapter version `mini-5.1.2/1`, the project, build key, preview assumptions and SHA-256 of the final G-code. Changes to persisted parameter meaning require an explicit schema migration/version change; algorithm refinements must retain engine provenance and explain path differences. Retain the actual G-code and report when an exact experiment record matters.
+Schema 1 preserves editable recipe semantics; byte-identical toolpath replay across future engine releases is not yet guaranteed. Reports record the actual engine version; complete-job reports also record adapter version `mini-5.1.2/2`, the project, build key, preview assumptions and SHA-256 of the final G-code. Changes to persisted parameter meaning require an explicit schema migration/version change; algorithm refinements must retain engine provenance and explain path differences. Retain the actual G-code and report when an exact experiment record matters.
 
 ## Foundation planning
 

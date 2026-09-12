@@ -50,6 +50,7 @@ const foundation: FoundationSettings = {
   speedMmS: 20,
   blendHeightMm: 4,
   rimTurns: 1,
+  elephantFootMm: 0,
 };
 
 function matrixAt(mesh: THREE.InstancedMesh, index: number): THREE.Matrix4 {

@@ -22,7 +22,7 @@ import { useWebMcp } from './useWebMcp';
 const Viewport = lazy(() => import('./Viewport').then((module) => ({ default: module.Viewport })));
 
 export function App() {
-  const { project, setProject, undo, redo, canUndo, canRedo } = useProjectHistory({ format: 'np3dp-project', schemaVersion: 1, recipe: DEFAULT_RECIPE, setup: DEFAULT_PRINT_SETUP });
+  const { project, setProject, undo, redo, canUndo, canRedo } = useProjectHistory({ format: 'np3dp-project', schemaVersion: 2, recipe: DEFAULT_RECIPE, setup: DEFAULT_PRINT_SETUP });
   const { recipe, setup } = project;
   const latestProject = useRef(project);
   latestProject.current = project;
@@ -88,7 +88,7 @@ export function App() {
   return <div className="app-shell">
     <header className="app-header">
       <div className="brand" aria-label="NP3DP workbench"><img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" /><span>NP3DP</span></div>
-      <span className="header-divider" /><div className="project-name"><input key={recipe.name} aria-label="Recipe name" defaultValue={recipe.name} maxLength={80} onBlur={(event) => { if (event.target.value !== recipe.name && !changeRecipe({ ...recipe, name: event.target.value })) event.target.value = recipe.name; }} onKeyDown={(event) => { if (event.key === 'Enter') event.currentTarget.blur(); }} /><span>DEPOSITION WORKBENCH <b>0.2</b></span></div>
+      <span className="header-divider" /><div className="project-name"><input key={recipe.name} aria-label="Recipe name" defaultValue={recipe.name} maxLength={80} onBlur={(event) => { if (event.target.value !== recipe.name && !changeRecipe({ ...recipe, name: event.target.value })) event.target.value = recipe.name; }} onKeyDown={(event) => { if (event.key === 'Enter') event.currentTarget.blur(); }} /><span>DEPOSITION WORKBENCH <b>0.3</b></span></div>
       <div className="header-actions"><button className="button quiet-button" title="Open a recipe or complete project" onClick={() => fileInput.current?.click()}><Icon name="open" /><span>Open recipe</span></button><button className="button secondary-button" onClick={() => {
         downloadText(setup.foundation.enabled ? serializeProject(project) : serializeRecipe(recipe), `${safeFilename(recipe.name)}.${setup.foundation.enabled ? 'np3dp-project' : 'np3dp'}.json`, 'application/json');
         setNotice(setup.foundation.enabled ? 'Project downloaded with recipe and print setup.' : 'Recipe downloaded. Keep it locally or commit it to your Git repository.');
@@ -97,7 +97,7 @@ export function App() {
     </header>
     <main className="workspace">
       <div className="control-workspace"><div className="workspace-switch" role="group" aria-label="Workbench mode"><button aria-pressed={workspace === 'design'} onClick={() => setWorkspace('design')}>Design</button><button aria-pressed={workspace === 'print'} onClick={() => setWorkspace('print')}>Prepare print<span className="new-feature-dot" /></button></div>
-        {workspace === 'design' ? <EditorPanel recipe={recipe} selectedBandId={selectedBandId} selectBand={selectBand} onChange={changeRecipe} /> : <PrintPanel project={project} onChange={changeProject} diagnostics={inspected?.diagnostics ?? []} metrics={inspected?.metrics ?? null} pending={generated.pending} generationError={generated.error} />}
+        {workspace === 'design' ? <EditorPanel recipe={recipe} selectedBandId={selectedBandId} selectBand={selectBand} onChange={changeRecipe} /> : <PrintPanel project={project} onChange={changeProject} diagnostics={inspected?.diagnostics ?? []} metrics={inspected?.metrics ?? null} pending={generated.pending} generationError={generated.error} attachment={generated.build?.attachment} />}
       </div>
       <section className="design-space" aria-label="Design preview">
         <div className="workbench-toolbar"><div className="view-switch" role="group" aria-label="Preview representation">{([['strand', 'Strand model'], ['path', 'Nozzle path'], ['form', 'Form']] as const).map(([value, label]) => <button key={value} aria-pressed={mode === value} onClick={() => setMode(value)}>{label}</button>)}</div>

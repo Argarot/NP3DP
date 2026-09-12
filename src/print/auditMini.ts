@@ -1,5 +1,6 @@
 import type { Vec3 } from '../domain/types';
 import type { PrintSetup } from './types';
+import { inspectMiniDisplayMetadata } from './auditDisplay';
 
 export interface MiniAudit {
   errors: string[];
@@ -11,6 +12,9 @@ export interface MiniAudit {
   commandedSeconds: number;
   maximumFlowMm3S: number;
   shutdownComplete: boolean;
+  startupExtrusionMm: number;
+  purgeComplete: boolean;
+  progressUpdates: number;
 }
 
 type Stage = 'startup' | 'body' | 'finish';
@@ -31,7 +35,7 @@ export function auditMiniGcode(text: string, setup: PrintSetup): MiniAudit {
   const result: MiniAudit = {
     errors: [], moveCount: 0, bodyMoveCount: 0, bodyExtrusionMm: 0,
     bodyDwellSeconds: 0, depositedFilamentMm: 0, commandedSeconds: 0,
-    maximumFlowMm3S: 0, shutdownComplete: false,
+    maximumFlowMm3S: 0, shutdownComplete: false, startupExtrusionMm: 0, purgeComplete: false, progressUpdates: 0,
   };
   const fail = (line: number, message: string) => {
     if (result.errors.length < 30) result.errors.push(`Line ${line}: ${message}`);
@@ -73,6 +77,11 @@ export function auditMiniGcode(text: string, setup: PrintSetup): MiniAudit {
   let modelCheck = false;
   let nozzleCheck = false;
   let startupExtrusion = false;
+  let purgeStep = 0;
+  let lastPercent = -1, lastRemaining = Infinity, lastProgressSeconds = 0;
+  let progressFinished = false;
+  const progressRecords: { percent: number; remaining: number; elapsed: number }[] = [];
+  let needsPostWaitProgress = false;
   let stage: Stage = 'startup';
   let bodyStage: BodyStage = 'approach';
   let enteredBody = false;
@@ -104,7 +113,7 @@ export function auditMiniGcode(text: string, setup: PrintSetup): MiniAudit {
     const n = offset + 1;
     if (original === '; NP3DP_PHASE body') {
       if (enteredBody || enteredFinish) fail(n, 'Unexpected body boundary.');
-      if (!startupExtrusion || !position || !mesh) fail(n, 'Body begins before the probed, primed startup is complete.');
+      if (!startupExtrusion || !position || !mesh || purgeStep !== 5) fail(n, 'Body begins before the probed, primed startup and complete two-segment purge.');
       if (!atFirstLayerTargets()) fail(n, 'Body begins without resolved first-layer temperature states.');
       enteredBody = true;
       stage = 'body';
@@ -150,6 +159,9 @@ export function auditMiniGcode(text: string, setup: PrintSetup): MiniAudit {
 
     const code = original.split(';', 1)[0]!.trim();
     if (!code) return;
+    if (result.progressUpdates === 0 && !code.startsWith('M73 ')) fail(n, 'The first executable command must initialize MINI progress.');
+    if (needsPostWaitProgress && !code.startsWith('M73 ')) fail(n, 'A thermal/probe wait must be followed by a progress refresh.');
+    needsPostWaitProgress = /^(?:M109|M190|G29)(?:\s|$)/.test(code);
     if (disabled) {
       fail(n, 'Command after motor shutdown.');
       return;
@@ -187,6 +199,19 @@ export function auditMiniGcode(text: string, setup: PrintSetup): MiniAudit {
     };
 
     switch (command) {
+      case 'M73':
+        if (!exact(['P', 'R'])) break;
+        if (!Number.isInteger(words.P) || words.P! < 0 || words.P! > 100 || !Number.isInteger(words.R) || words.R! < 0 || words.R! > 0xffff_ffff) fail(n, 'Invalid MINI progress values.');
+        if (result.progressUpdates === 0 && words.P !== 0) fail(n, 'Progress must begin at zero.');
+        if (words.P! < lastPercent || words.R! > lastRemaining) fail(n, 'Progress or remaining time moved backwards.');
+        if (words.P === 100 && (stage !== 'finish' || !finishBarrier || words.R !== 0)) fail(n, 'Completion progress requires the finished motion barrier and zero remaining time.');
+        if (words.R === 0 && words.P !== 100) fail(n, 'Zero remaining time is reserved for completion.');
+        if (result.commandedSeconds - lastProgressSeconds > 60.001) fail(n, 'Progress refresh interval exceeds the adapter budget.');
+        lastPercent = words.P!; lastRemaining = words.R!; lastProgressSeconds = result.commandedSeconds;
+        progressFinished = words.P === 100;
+        result.progressUpdates++;
+        progressRecords.push({ percent: words.P!, remaining: words.R!, elapsed: result.commandedSeconds });
+        break;
       case 'G21':
         if (exact([]) && stage === 'startup') millimetres = true;
         else if (stage !== 'startup') fail(n, 'Unit mode change outside startup.');
@@ -271,6 +296,7 @@ export function auditMiniGcode(text: string, setup: PrintSetup): MiniAudit {
         break;
       case 'G92':
         if (!exact(['E']) || words.E !== 0) fail(n, 'Only G92 E0 is supported.');
+        if (stage === 'startup' && purgeStep === 3) purgeStep = 4;
         break;
       case 'M107':
         if (!exact([])) break;
@@ -333,6 +359,15 @@ export function auditMiniGcode(text: string, setup: PrintSetup): MiniAudit {
     && finishFanOff && finishPressureReset && finishFlowReset;
   if (!result.shutdownComplete) fail(lines.length, 'Missing body or controlled finish.');
   if (result.bodyExtrusionMm <= 0) fail(lines.length, 'No body extrusion.');
+  result.purgeComplete = purgeStep === 5;
+  if (!progressFinished || result.progressUpdates < 2) fail(lines.length, 'Missing initial/complete progress metadata.');
+  for (const record of progressRecords) {
+    const finished = record.percent === 100;
+    const percent = finished ? 100 : Math.min(99, Math.floor(record.elapsed / result.commandedSeconds * 100));
+    const remaining = finished ? 0 : Math.ceil(Math.max(0, result.commandedSeconds - record.elapsed) / 60);
+    if (record.percent !== percent || record.remaining !== remaining) { fail(lines.length, 'Progress values disagree with independently parsed command time.'); break; }
+  }
+  for (const error of inspectMiniDisplayMetadata(text, result.commandedSeconds)) fail(0, error);
   return result;
 
   function initializedForMotion(): boolean {
@@ -454,6 +489,7 @@ export function auditMiniGcode(text: string, setup: PrintSetup): MiniAudit {
       }
       if (feed / 60 > setup.printer.maxXySpeedMmS + 0.001) fail(n, 'Post-home XY feed exceeds the selected limit.');
       position = { x: parameters.X!, y: parameters.Y!, z: postHomeZ };
+      if (position.x !== 5 || position.y !== 6 || position.z !== 2) fail(n, 'Purge approach must resolve X5 Y6 at Z2.');
       checkEnvelope(position, n);
       result.moveCount++;
       return;
@@ -474,6 +510,14 @@ export function auditMiniGcode(text: string, setup: PrintSetup): MiniAudit {
     }
 
     const e = parameters.E ?? 0;
+    if (stage === 'startup' && purgeStep < 5) {
+      const only = (...names: string[]) => Object.keys(parameters).every((name) => names.includes(name));
+      if (purgeStep === 0 && commandName === 'G0' && only('Z', 'F') && next.z === 0.2) purgeStep = 1;
+      else if (purgeStep === 1 && commandName === 'G1' && only('X', 'Y', 'E', 'F') && next.x === 65 && next.y === 6 && next.z === 0.2 && e === 8) purgeStep = 2;
+      else if (purgeStep === 2 && commandName === 'G1' && only('X', 'Y', 'E', 'F') && next.x === 135 && next.y === 6 && next.z === 0.2 && e === 10) purgeStep = 3;
+      else if (purgeStep === 4 && commandName === 'G0' && only('Z', 'F') && next.z === 2) purgeStep = 5;
+      else fail(n, 'Invalid ordered purge: lower, E8 intro, E10 verification line, E reset, clearance lift required.');
+    } else if (stage === 'startup' && e !== 0) fail(n, 'Unexpected extrusion after the completed purge.');
     if (stage === 'finish') {
       parseFinishMotion(commandName, next, e, hasPosition, n, parameters);
     } else {
@@ -484,6 +528,7 @@ export function auditMiniGcode(text: string, setup: PrintSetup): MiniAudit {
         if (stage === 'startup') {
           if (!atFirstLayerTargets()) fail(n, 'Startup extrusion requires exact waited first-layer targets.');
           startupExtrusion = true;
+          result.startupExtrusionMm += e;
         } else if (!atRequiredBodyTargets(next.z)) {
           fail(n, 'Body extrusion does not have a complete resolved temperature pair.');
         }

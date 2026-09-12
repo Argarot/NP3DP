@@ -15,13 +15,13 @@ The geometric strand view does not predict sag, cooling, attachment, collision o
 
 ## Prepare a complete experiment
 
-Choose **Prepare print → Test bench → Load control cup**. It enables the foundation and loads a small conventional spiral. The test retains your current printer, material, filament diameter and flow multiplier; review them in **Printer** and **Design → Process**. **Foundation** controls layers, bead dimensions, speed, pattern lead-in and rim turns.
+Choose **Prepare print → Test bench → Load retry A** for the next physical test. The original control succeeded in one reported print; the original wave failed attachment. Tests retain your current printer, material, filament diameter and flow multiplier; review them in **Printer** and **Design → Process**. **Foundation** controls layers, bead dimensions, speed, pattern lead-in, rim turns and first-layer compensation. New setups use 0.15 mm inset; old v1 projects migrate with zero inset.
 
 Use **Printer → Import PrusaSlicer config** for an optional supported flat `.ini` file. Read the proposed changes and notes before applying them. The [import guide](guides/profile-import.md) describes supported fields and omissions. Undo/redo restores the entire project together.
 
 When the current plan is ready, **Export print** regenerates it and independently audits the final MINI job in a worker. Red errors block the G-code download; settings and the report remain available. The report records assumptions, final command checks and a checksum of the exact G-code. Save all three files together, then follow the [first-print guide](guides/first-print.md).
 
-Complete output currently targets MINI-family Buddy firmware 5.1.2 with stock hotend, 0.4 mm nozzle and 1.75 mm filament. MINI versus MINI+ may remain unknown. The recorded material is eSUN PLA Basic. No recipe has been physically validated yet.
+Complete output targets MINI-family Buddy firmware 5.1.2 with stock hotend, 0.4 mm nozzle and 1.75 mm filament. MINI versus MINI+ may remain unknown. The recorded material is eSUN PLA Basic. New retries remain unprinted; the original control observation does not establish repeatability or physical prediction accuracy. Follow the [retry guide](guides/retry-print.md).
 
 If **Include foundation and finish** is off, the top action remains **Motion draft**. This `.gcode.txt` inspection export contains walls without temperatures, homing, purge or shutdown; it is not a complete job. Original wall studies retain their Z=0.4 mm reference and can intentionally extend below it, with diagnostics. Complete builds use explicit foundation placement and checks.
 
@@ -45,6 +45,6 @@ npm run licenses:check
 npm run calibration
 ```
 
-`npm run calibration` uses the app's compiler to generate four calibration projects, local G-code/reports in `artifacts/session-002/` and a checksum/measurement manifest. `npm run examples` refreshes the five original wall studies. `npm run measure` retains the session-001 wall workload measurement command. Browser tests use the built app on port 4173; development uses 5173.
+`npm run calibration` uses the app's compiler to generate two retry projects, local G-code/reports in `artifacts/session-003/` and a checksum/measurement manifest. Original session-002 calibration files are preserved. `npm run examples` refreshes the five original wall studies. `npm run measure` retains the session-001 wall workload measurement command. Browser tests use the built app on port 4173; development uses 5173.
 
 Free-space loops, accurate filament simulation, integrated lamp hardware and multi-printer compatibility remain required [roadmap](milestones.md) capabilities. See [status](status.md) for the next session and unfinished gates.

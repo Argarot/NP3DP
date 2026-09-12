@@ -24,6 +24,9 @@ test('control specimen produces a portable project and checked complete print fi
   await page.getByRole('button', { name: 'Download .gcode', exact: true }).click();
   const code = await readFile((await (await codeEvent).path())!, 'utf8');
   expect(code).toContain('M109 R170');
+  expect(code).toContain('; thumbnail_QOI begin 220x124');
+  expect(code).toContain('; thumbnail_QOI begin 200x240');
+  expect(code).toContain('M400\nM73 P100 R0');
   expect(code).toContain('; STAGE foundation');
   expect(code).toContain('; STAGE wall');
   expect(code).toContain('\nM84\n');
@@ -39,6 +42,26 @@ test('control specimen produces a portable project and checked complete print fi
   await page.getByRole('tab', { name: 'Foundation', exact: true }).click();
   await expect(page.getByLabel('Include foundation and finish')).toBeChecked();
   expect(errors).toEqual([]);
+});
+
+test('retry geometry, compensation and version-1 migration remain explicit in the UI', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Prepare print', exact: true }).click();
+  await page.getByRole('button', { name: 'Load retry A', exact: true }).click();
+  await expect(page.getByLabel('Recipe name')).toHaveValue('05 Retry A attachment');
+  await expect(page.getByLabel('Nominal attachment estimate')).toContainText('100%');
+  await page.getByRole('tab', { name: 'Foundation', exact: true }).click();
+  const compensation = page.getByRole('spinbutton', { name: 'Elephant foot compensation value', exact: true });
+  await expect(compensation).toHaveValue('0.15');
+  await page.getByRole('button', { name: 'Export print', exact: true }).click();
+  await expect(page.getByRole('dialog')).toContainText('Command audit passed');
+  await page.getByText('Inspect startup and initial commands', { exact: true }).click();
+  await expect(page.getByLabel('Complete G-code preview')).toContainText('G29');
+  await expect(page.getByLabel('Complete G-code preview')).toContainText('X135.000 Y6.000 E10.00000');
+  await page.getByRole('button', { name: 'Close print export' }).click();
+  await page.getByLabel('Open recipe file').setInputFiles('examples/calibration/01-control-cup.np3dp-project.json');
+  await expect(compensation).toHaveValue('0');
+  await expect(page.getByLabel('Recipe name')).toHaveValue('01 Control cup');
 });
 
 test('profile changes are reviewed, applied atomically and undone with the project', async ({ page }) => {

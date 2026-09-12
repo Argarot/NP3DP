@@ -18,7 +18,7 @@ A project's code license does not automatically establish rights to every linked
 
 The independent-code route passed G0 under the build authorization. Publish required third-party notices with every engineering preview. The requested public GitHub source/Pages preview does not select an open-source license for the original product code; package metadata remains `private: true` and `UNLICENSED`. Obtain the product manager's decision before adopting project distribution terms or incorporating code/profiles that constrain them.
 
-## Installed runtime components — unchanged through session 002
+## Installed runtime components — unchanged through session 003
 
 | Component | Exact version | Source | License / incorporated scope |
 |---|---|---|---|
@@ -35,3 +35,5 @@ The development graph is **not all permissive**: Lightning CSS 1.33.0 and its op
 The other recorded development identifiers are MIT, Apache-2.0, ISC and BSD-3-Clause. This inventory describes this resolved build, not blanket permission to adopt future versions or other packages. GitHub Actions are pinned to inspected official action commits in the workflow files.
 
 Session 002 adds independently written profile parsing and a firmware adapter, with no new packages or vendored slicer/profile data. Pinned Prusa firmware and profile sources were consulted as command/data references; [the research record](research/mini-5.1.2-adapter.md) distinguishes historical AGPL profile material from unresolved rights in a separate newer profile repository. User-imported flat configurations remain local: only selected values, source identifiers, digest and mapped/ignored field names are retained. Embedded scripts, G-code and service credentials are not copied into exported projects. Broad profile bundling still needs a separate licensing review.
+
+Session 003 adds original QOI encoding/rasterization, progress annotation, convex contour inset and nominal gap analysis. No package, upstream implementation or macro/profile bundle was incorporated. Pinned Prusa firmware/PrusaSlicer sources define the [LCD wire-format reference](research/mini-display-metadata.md); historical profile numeric intro-line behavior informs the [purge adapter](research/mini-purge.md). Research papers inform experiment design with their transfer limits recorded in [attachment research](research/wave-attachment.md). The product manager's failure photo is retained only in ignored local artifacts, not published in the source/site.

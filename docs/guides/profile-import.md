@@ -24,3 +24,7 @@ Import is bounded to 1 MB, 10,000 lines and bounded provenance lists. Duplicate 
 A project stores the source filename, SHA-256 digest, available source version/profile identifiers, mapped and ignored keys, warnings and the imported value baseline. Subsequent manual changes appear as current overrides. The digest identifies the supplied file; it does not certify its origin or correctness. The source file itself is not embedded in the project.
 
 Imported temperatures and limits are starting values, not proof of non-planar printability. No profile sets the installed firmware or silently grants support for another printer. See [first print](first-print.md), [setup/adapter research](../research/mini-5.1.2-adapter.md), [profile reuse research](../research/profile-reuse.md) and [licensing policy](../third-party-policy.md).
+
+## Session-003 addition
+
+The flat importer now maps `elefant_foot_compensation` to the first-layer inset (0–0.5 mm), with review and source provenance. New project/setup files use schema 2. Version-1 projects migrate with a zero inset, preserving their footprint.

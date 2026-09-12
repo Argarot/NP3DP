@@ -1,0 +1,85 @@
+{
+  "format": "np3dp-project",
+  "schemaVersion": 2,
+  "recipe": {
+    "schemaVersion": 1,
+    "name": "05 Retry A attachment",
+    "shape": {
+      "heightMm": 12,
+      "baseDiameterMm": 34,
+      "topDiameterMm": 34,
+      "bellyMm": 0,
+      "section": "circle",
+      "aspectRatio": 1,
+      "twistDeg": 0
+    },
+    "process": {
+      "pitchMm": 0.3,
+      "strandDiameterMm": 0.45,
+      "filamentDiameterMm": 1.75,
+      "speedMmS": 6,
+      "travelMmS": 60,
+      "flowMultiplier": 1
+    },
+    "bands": [
+      {
+        "id": "test-wall",
+        "kind": "wave",
+        "weight": 1,
+        "amplitudeMm": 0.08,
+        "repeatsPerTurn": 14,
+        "phaseAdvanceDeg": 180,
+        "radialAmplitudeMm": 0,
+        "speedVariation": 0,
+        "flowVariation": 0,
+        "dwellSeconds": 0,
+        "anchorVolumeMm3": 0
+      }
+    ]
+  },
+  "setup": {
+    "schemaVersion": 2,
+    "printer": {
+      "adapter": "prusa-mini-buddy-5.1.2",
+      "variant": "unknown",
+      "firmware": "5.1.2+13478",
+      "hotend": "stock",
+      "nozzleDiameterMm": 0.4,
+      "maxXySpeedMmS": 100,
+      "maxZSpeedMmS": 8,
+      "accelerationMmS2": 500
+    },
+    "material": {
+      "name": "eSUN PLA Basic",
+      "color": "unspecified",
+      "nozzleC": 210,
+      "bedC": 60,
+      "firstLayerNozzleC": 215,
+      "firstLayerBedC": 60,
+      "maxFlowMm3S": 5,
+      "fanPercent": 100
+    },
+    "foundation": {
+      "enabled": true,
+      "layers": 3,
+      "layerHeightMm": 0.2,
+      "lineWidthMm": 0.45,
+      "speedMmS": 20,
+      "blendHeightMm": 4,
+      "rimTurns": 1,
+      "elephantFootMm": 0.15
+    },
+    "provenance": {
+      "source": "manual",
+      "filename": "",
+      "digest": "",
+      "slicerVersion": "",
+      "printerProfile": "",
+      "filamentProfile": "",
+      "importedValues": {},
+      "mappedFields": [],
+      "ignoredFields": [],
+      "warnings": []
+    }
+  }
+}

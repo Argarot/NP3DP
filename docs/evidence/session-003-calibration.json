@@ -1,0 +1,110 @@
+{
+  "generatedAt": "2026-09-12T10:09:47.517Z",
+  "node": "v22.23.2",
+  "platform": "win32",
+  "measurementScope": "One local compilation per study. Commanded times exclude thermal waits, probing, homing and firmware dynamics. No physical validation.",
+  "studies": [
+    {
+      "id": "retry-a",
+      "filename": "05-retry-a-attachment",
+      "gcodeSha256": "80db73b43e399267d49157fe7a9bef6a6080fbf2648b0faf63e4c7101e2a0085",
+      "bytes": 966368,
+      "events": 20498,
+      "compileMs": 1455.41,
+      "commandMetrics": {
+        "maximumXySpeedMmS": 20,
+        "maximumZSpeedMmS": 2,
+        "maximumFlowMm3S": 1.628318530717959,
+        "minimumZMm": 0.2,
+        "maximumZMm": 13
+      },
+      "toolpathStats": {
+        "pathLengthMm": 10770.204118509913,
+        "extrusionVolumeMm3": 1204.5853611516857,
+        "filamentLengthMm": 500.8083973314005,
+        "commandedDurationS": 1037.6623032151806,
+        "extrudeMoves": 20495,
+        "travelMoves": 3,
+        "dwellCount": 0,
+        "bounds": {
+          "min": {
+            "x": -17,
+            "y": -17,
+            "z": 0.2
+          },
+          "max": {
+            "x": 17,
+            "y": 17,
+            "z": 13
+          }
+        }
+      },
+      "audit": {
+        "errors": [],
+        "moveCount": 20509,
+        "bodyMoveCount": 20499,
+        "bodyExtrusionMm": 500.8196799999862,
+        "bodyDwellSeconds": 0,
+        "depositedFilamentMm": 518.8196799999846,
+        "commandedSeconds": 1057.2921833902033,
+        "maximumFlowMm3S": 4.489859500755412,
+        "shutdownComplete": true,
+        "startupExtrusionMm": 18,
+        "purgeComplete": true,
+        "progressUpdates": 41
+      },
+      "physicalStatus": "unprinted"
+    },
+    {
+      "id": "retry-b",
+      "filename": "06-retry-b-openings",
+      "gcodeSha256": "aa3240bdbb258beb41400503927175751d6ad37f33c5d327db0a7923527aa5be",
+      "bytes": 862392,
+      "events": 18178,
+      "compileMs": 1191.68,
+      "commandMetrics": {
+        "maximumXySpeedMmS": 20,
+        "maximumZSpeedMmS": 2,
+        "maximumFlowMm3S": 1.628318530717959,
+        "minimumZMm": 0.2,
+        "maximumZMm": 13
+      },
+      "toolpathStats": {
+        "pathLengthMm": 9704.753842264658,
+        "extrusionVolumeMm3": 1035.1328163954242,
+        "filamentLengthMm": 430.35821580007735,
+        "commandedDurationS": 860.0872571743148,
+        "extrudeMoves": 18175,
+        "travelMoves": 3,
+        "dwellCount": 0,
+        "bounds": {
+          "min": {
+            "x": -17,
+            "y": -17,
+            "z": 0.2
+          },
+          "max": {
+            "x": 17,
+            "y": 17,
+            "z": 13
+          }
+        }
+      },
+      "audit": {
+        "errors": [],
+        "moveCount": 18189,
+        "bodyMoveCount": 18179,
+        "bodyExtrusionMm": 430.3574399999371,
+        "bodyDwellSeconds": 0,
+        "depositedFilamentMm": 448.35743999992707,
+        "commandedSeconds": 879.7169358360983,
+        "maximumFlowMm3S": 4.489859500755412,
+        "shutdownComplete": true,
+        "startupExtrusionMm": 18,
+        "purgeComplete": true,
+        "progressUpdates": 35
+      },
+      "physicalStatus": "unprinted"
+    }
+  ]
+}

@@ -22,14 +22,16 @@ export function parseProjectText(text: string): PrintProject {
   }
 }
 
-function parseProject(input: unknown): PrintProject {
+export function parseProject(input: unknown): PrintProject {
   const project = expectRecord(input, 'project');
   expectExactKeys(project, PROJECT_KEYS, 'project');
   if (project.format !== 'np3dp-project') throw new Error('Invalid project.format: expected "np3dp-project".');
-  if (project.schemaVersion !== 1) {
-    throw new Error(`Invalid project: unsupported schemaVersion ${describe(project.schemaVersion)}; only version 1 is supported.`);
+  if (project.schemaVersion !== 1 && project.schemaVersion !== 2) {
+    throw new Error(`Invalid project: unsupported schemaVersion ${describe(project.schemaVersion)}; versions 1 and 2 are supported.`);
   }
-  return { format: 'np3dp-project', schemaVersion: 1, recipe: parseRecipe(project.recipe), setup: parsePrintSetup(project.setup) };
+  const setup = expectRecord(project.setup, 'project.setup');
+  if (setup.schemaVersion !== project.schemaVersion) throw new Error('Invalid project: envelope and print setup schema versions must match.');
+  return { format: 'np3dp-project', schemaVersion: 2, recipe: parseRecipe(project.recipe), setup: parsePrintSetup(setup) };
 }
 
 function expectRecord(value: unknown, path: string): Record<string, unknown> {

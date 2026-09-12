@@ -7,6 +7,7 @@ export interface CalibrationStudy {
   description: string;
   observe: string[];
   recipe: Recipe;
+  loadLabel?: string;
 }
 
 function specimen(name: string, diameter: number, height: number): Recipe {
@@ -38,4 +39,19 @@ export const CALIBRATION_STUDIES: readonly CalibrationStudy[] = [
   { id: 'wave', title: '02 / Wave coupon', description: '34 mm × 14 mm. Adds a small vertical wave while keeping radial, speed and flow effects off.', observe: ['Compare attachment and strand thickness with the control', 'Record any nozzle drag or detached strands', 'Photograph the side against a millimetre scale'], recipe: parseRecipe(wave) },
   { id: 'miniature', title: '03 / Mini woven vase', description: '40 mm base × 45 mm wall. A small decorative experiment after the control and wave coupon.', observe: ['Opening sizes and pattern continuity', 'Loose strands and nozzle contact', 'Compare the actual silhouette with the commanded preview'], recipe: parseRecipe(miniature) },
   { id: 'held-spans', title: '04 / Held-span coupon', description: '32 mm × 12 mm. A 4 mm conventional collar leads into anchoring, timed holds and free spans.', observe: ['Attachment at the ends of each span', 'Sag at the centre and any nozzle drag', 'Keep this separate from the baseline extrusion check'], recipe: parseRecipe(spans) },
+];
+
+const retryA = specimen('05 Retry A attachment', 34, 12);
+retryA.process = { ...retryA.process, pitchMm: 0.3, strandDiameterMm: 0.45, speedMmS: 6 };
+retryA.bands[0] = { ...retryA.bands[0]!, amplitudeMm: 0.08, phaseAdvanceDeg: 180 };
+const retryB = structuredClone(retryA);
+retryB.name = '06 Retry B openings';
+retryB.process.pitchMm = 0.4;
+retryB.bands[0]!.amplitudeMm = 0.12;
+
+/** New specimens are explicit choices. Preserve the original studies and files
+ * as the physical record instead of silently replacing their parameters. */
+export const RETRY_STUDIES: readonly CalibrationStudy[] = [
+  { id: 'retry-a', title: '05 / Retry A — attachment', loadLabel: 'retry A', description: 'Print this next. 34 × 12 mm, 0.30 mm rise/turn, 0.08 mm wave, 6 mm/s. Tests startup contact with small openings above the lead-in.', observe: ['MINI preview and remaining time visible', 'Purge deposited across the front before the foundation', 'Fan spins after the foundation', 'First wave turns stay attached; record any dragged strands', 'Measure first-layer flare and photograph against a ruler'], recipe: parseRecipe(retryA) },
+  { id: 'retry-b', title: '06 / Retry B — openings', loadLabel: 'retry B', description: 'After A attaches. Same size and speed; 0.40 mm rise/turn and 0.12 mm wave create longer unsupported windows.', observe: ['Only advance after A remains attached', 'Record opening size, sag and detached strands', 'Compare duration and side photographs with A'], recipe: parseRecipe(retryB) },
 ];

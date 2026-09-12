@@ -1,11 +1,10 @@
 import { useCallback, useReducer } from 'react';
-import { parseRecipe } from '../domain/recipe';
-import { parsePrintSetup } from '../print/setup';
+import { parseProject } from '../print/project';
 import type { PrintProject } from '../print/types';
 
 interface History { past: PrintProject[]; present: PrintProject; future: PrintProject[] }
 type Action = { kind: 'edit'; project: PrintProject } | { kind: 'undo' | 'redo' };
-function validate(project: PrintProject): PrintProject { return { format: 'np3dp-project', schemaVersion: 1, recipe: parseRecipe(project.recipe), setup: parsePrintSetup(project.setup) }; }
+function validate(project: PrintProject): PrintProject { return parseProject(project); }
 function reducer(state: History, action: Action): History {
   if (action.kind === 'edit') {
     if (JSON.stringify(state.present) === JSON.stringify(action.project)) return state;

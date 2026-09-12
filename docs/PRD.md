@@ -1,6 +1,6 @@
 # Product requirements
 
-**Status: approved for implementation on 11 September 2026; session 002 hardware and print workflow recorded.** The product manager authorized building with logged defaults for low-impact decisions, discussion for major decisions, a visible result each session, and current documentation. Distribution licensing, measured clearance and numerical physical-accuracy targets remain open as recorded in [decisions](decisions.md). [Implementation status](status.md) distinguishes built capabilities from acceptance gates.
+**Status: approved for implementation on 11 September 2026; session 003 print feedback and export requirements recorded.** The product manager authorized building with logged defaults for low-impact decisions, discussion for major decisions, a visible result each session, and current documentation. Distribution licensing, measured clearance and numerical physical-accuracy targets remain open as recorded in [decisions](decisions.md). [Implementation status](status.md) distinguishes built capabilities from acceptance gates.
 
 ## Purpose
 
@@ -20,6 +20,8 @@ The first physical reference remains an open decorative vase on the product mana
 - An experimental playground with freely combined Z/radial/speed/extrusion effects in the first release.
 - Design recipe download/upload with selected recipes versioned through normal Git workflow; no automatic in-app commits.
 - A 3D representation of the design and generation of custom G-code.
+- Complete exports include standard reviewed startup with mandatory mesh bed leveling for the MINI, a visible purge, printer-compatible object thumbnails and progress/remaining-time display. Estimates must state their timing scope.
+- Editable elephant-foot compensation for the first layer, with migrations that preserve older experiments. Print feedback must remain tied to the original files and distinguish physical observations from software checks.
 - Continuous vase paths where appropriate, plus intentional starts, stops, travel, anchoring, and staged deposition where a method requires them.
 - Arches, triangular/chevron structures, sinusoidal walls, sagging loops, pause-and-move bridging, and free-space loop deposition as explicit generative methods with sliders.
 - Accurate physical simulation of filament behavior as a required development track, with progressively measured fidelity and a useful printed-result preview from early versions.
